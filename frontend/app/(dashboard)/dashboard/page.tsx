@@ -30,20 +30,20 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-xl font-bold text-gray-900">
           {greeting}, {session?.user?.name?.split(" ")[0] || "Doutor(a)"}
         </h1>
-        <p className="text-gray-500 mt-1">Veja o que está acontecendo na sua clínica hoje.</p>
+        <p className="text-sm text-gray-500">Veja o que está acontecendo na sua clínica hoje.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map((stat) => (
-          <div key={stat.name} className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-sm text-gray-500">{stat.name}</p>
+          <div key={stat.name} className="bg-white rounded-lg border border-gray-200 p-4">
+            <p className="text-xs text-gray-500">{stat.name}</p>
             <div className="flex items-baseline gap-2 mt-1">
-              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+              <p className="text-xl font-bold text-gray-900">{stat.value}</p>
               {stat.change && (
                 <span className={`text-xs font-medium ${stat.up ? "text-green-600" : "text-red-600"}`}>
                   {stat.change}
@@ -51,30 +51,30 @@ export default function DashboardPage() {
               )}
             </div>
             {stat.subtext && (
-              <p className="text-xs text-gray-400 mt-1">{stat.subtext}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{stat.subtext}</p>
             )}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200">
-          <div className="px-5 py-4 border-b border-gray-100">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Agenda de Hoje</h2>
-              <span className="text-sm text-gray-500">{todayAppointments.length} consultas</span>
+              <h2 className="text-sm font-semibold text-gray-900">Agenda de Hoje</h2>
+              <span className="text-xs text-gray-500">{todayAppointments.length} consultas</span>
             </div>
           </div>
           <div className="divide-y divide-gray-100">
             {todayAppointments.map((apt, i) => (
-              <div key={i} className="flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 transition-colors">
-                <div className="w-14 text-sm font-medium text-gray-500">{apt.time}</div>
+              <div key={i} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                <div className="w-12 text-xs font-medium text-gray-500">{apt.time}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">{apt.patient}</p>
                   <p className="text-xs text-gray-500">{apt.type} — {apt.professional}</p>
                 </div>
                 <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                     apt.status === "completed"
                       ? "bg-green-50 text-green-700"
                       : apt.status === "in-progress"
@@ -89,11 +89,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">Visão Semanal</h2>
+        <div className="bg-white rounded-lg border border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h2 className="text-sm font-semibold text-gray-900">Visão Semanal</h2>
           </div>
-          <div className="p-5 space-y-4">
+          <div className="p-4 space-y-3">
             {[
               { day: "Seg", value: 6 },
               { day: "Ter", value: 8 },
@@ -105,9 +105,9 @@ export default function DashboardPage() {
               return (
                 <div key={item.day} className="flex items-center gap-3">
                   <span className="text-xs font-medium text-gray-500 w-8">{item.day}</span>
-                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"
+                      className="h-full bg-indigo-600 rounded-full"
                       style={{ width: `${(item.value / max) * 100}%` }}
                     />
                   </div>

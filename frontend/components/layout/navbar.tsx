@@ -13,7 +13,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
-      <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+      <div className="flex items-center justify-between h-14 px-4 sm:px-5">
         <div className="flex items-center">
           <button
             type="button"
@@ -35,8 +35,8 @@ export function Navbar({ onMenuClick }: NavbarProps) {
               </svg>
               <input
                 type="text"
-                placeholder="Pesquisar pacientes, consultas..."
-                className="w-80 pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                placeholder="Pesquisar..."
+                className="w-72 pl-9 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -52,7 +52,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           </button>
 
           <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-gray-200">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+            <div className="h-7 w-7 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-medium">
               {user?.name
                 ?.split(" ")
                 .map((n) => n[0])
