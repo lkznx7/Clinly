@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 
 const navigation = [
   {
-    name: "Dashboard",
+    name: "Painel",
     href: "/dashboard",
     icon: (props: React.SVGProps<SVGSVGElement>) => (
       <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -19,7 +19,7 @@ const navigation = [
     ),
   },
   {
-    name: "Patients",
+    name: "Pacientes",
     href: "/patients",
     icon: (props: React.SVGProps<SVGSVGElement>) => (
       <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -31,7 +31,7 @@ const navigation = [
     ),
   },
   {
-    name: "Appointments",
+    name: "Consultas",
     href: "/appointments",
     icon: (props: React.SVGProps<SVGSVGElement>) => (
       <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -43,7 +43,7 @@ const navigation = [
     ),
   },
   {
-    name: "Professionals",
+    name: "Profissionais",
     href: "/professionals",
     icon: (props: React.SVGProps<SVGSVGElement>) => (
       <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -57,7 +57,7 @@ const navigation = [
     ),
   },
   {
-    name: "Settings",
+    name: "Configurações",
     href: "/settings",
     icon: (props: React.SVGProps<SVGSVGElement>) => (
       <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -140,7 +140,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">
-                  {session?.user?.name || "User"}
+                  {session?.user?.name || "Usuário"}
                 </p>
                 <p className="text-xs text-gray-500">
                   {session?.user?.email || ""}

@@ -3,19 +3,25 @@
 import { useState } from "react";
 
 const patientsData = [
-  { id: "1", initials: "MS", name: "Maria Silva", age: 34, email: "maria@email.com", phone: "(11) 99999-1111", condition: "Anxiety Disorder", status: "active", lastVisit: "2026-07-10", nextAppt: "2026-07-22", professional: "Dr. Ana Costa", sessions: 12 },
-  { id: "2", initials: "JS", name: "João Santos", age: 45, email: "joao@email.com", phone: "(11) 99999-2222", condition: "Depression", status: "active", lastVisit: "2026-07-08", nextAppt: "2026-07-20", professional: "Dr. Pedro Lima", sessions: 8 },
-  { id: "3", initials: "LF", name: "Lucia Ferreira", age: 28, email: "lucia@email.com", phone: "(11) 99999-3333", condition: "PTSD", status: "pending", lastVisit: "2026-07-05", professional: "Dr. Ana Costa", sessions: 3 },
-  { id: "4", initials: "CM", name: "Carlos Mendes", age: 52, email: "carlos@email.com", phone: "(11) 99999-4444", condition: "Bipolar Disorder", status: "active", lastVisit: "2026-07-12", nextAppt: "2026-07-24", professional: "Dr. Pedro Lima", sessions: 20 },
-  { id: "5", initials: "AO", name: "Ana Oliveira", age: 39, email: "ana@email.com", phone: "(11) 99999-5555", condition: "OCD", status: "inactive", lastVisit: "2026-06-15", professional: "Dr. Ana Costa", sessions: 15 },
-  { id: "6", initials: "RL", name: "Roberto Lima", age: 61, email: "roberto@email.com", phone: "(11) 99999-6666", condition: "Insomnia", status: "active", lastVisit: "2026-07-11", nextAppt: "2026-07-18", professional: "Dr. Pedro Lima", sessions: 6 },
-  { id: "7", initials: "FC", name: "Fernanda Costa", age: 31, email: "fernanda@email.com", phone: "(11) 99999-7777", condition: "Panic Disorder", status: "active", lastVisit: "2026-07-09", nextAppt: "2026-07-16", professional: "Dr. Ana Costa", sessions: 10 },
+  { id: "1", initials: "MS", name: "Maria Silva", age: 34, email: "maria@email.com", phone: "(11) 99999-1111", condition: "Transtorno de Ansiedade", status: "active", lastVisit: "2026-07-10", nextAppt: "2026-07-22", professional: "Dr. Ana Costa", sessions: 12 },
+  { id: "2", initials: "JS", name: "João Santos", age: 45, email: "joao@email.com", phone: "(11) 99999-2222", condition: "Depressão", status: "active", lastVisit: "2026-07-08", nextAppt: "2026-07-20", professional: "Dr. Pedro Lima", sessions: 8 },
+  { id: "3", initials: "LF", name: "Lucia Ferreira", age: 28, email: "lucia@email.com", phone: "(11) 99999-3333", condition: "TEPT", status: "pending", lastVisit: "2026-07-05", professional: "Dr. Ana Costa", sessions: 3 },
+  { id: "4", initials: "CM", name: "Carlos Mendes", age: 52, email: "carlos@email.com", phone: "(11) 99999-4444", condition: "Transtorno Bipolar", status: "active", lastVisit: "2026-07-12", nextAppt: "2026-07-24", professional: "Dr. Pedro Lima", sessions: 20 },
+  { id: "5", initials: "AO", name: "Ana Oliveira", age: 39, email: "ana@email.com", phone: "(11) 99999-5555", condition: "TOC", status: "inactive", lastVisit: "2026-06-15", professional: "Dr. Ana Costa", sessions: 15 },
+  { id: "6", initials: "RL", name: "Roberto Lima", age: 61, email: "roberto@email.com", phone: "(11) 99999-6666", condition: "Insônia", status: "active", lastVisit: "2026-07-11", nextAppt: "2026-07-18", professional: "Dr. Pedro Lima", sessions: 6 },
+  { id: "7", initials: "FC", name: "Fernanda Costa", age: 31, email: "fernanda@email.com", phone: "(11) 99999-7777", condition: "Transtorno do Pânico", status: "active", lastVisit: "2026-07-09", nextAppt: "2026-07-16", professional: "Dr. Ana Costa", sessions: 10 },
 ];
 
 const statusColors: Record<string, string> = {
   active: "bg-green-50 text-green-700",
   pending: "bg-yellow-50 text-yellow-700",
   inactive: "bg-gray-100 text-gray-600",
+};
+
+const statusLabels: Record<string, string> = {
+  active: "Ativo",
+  pending: "Pendente",
+  inactive: "Inativo",
 };
 
 export default function PatientsPage() {
@@ -32,15 +38,15 @@ export default function PatientsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
-          <p className="text-gray-500 mt-1">{patientsData.length} patients registered</p>
+          <h1 className="text-2xl font-bold text-gray-900">Pacientes</h1>
+          <p className="text-gray-500 mt-1">{patientsData.length} pacientes cadastrados</p>
         </div>
         <button className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm">
           <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" x2="12" y1="5" y2="19" />
             <line x1="5" x2="19" y1="12" y2="12" />
           </svg>
-          Add Patient
+          Cadastrar Paciente
         </button>
       </div>
 
@@ -52,7 +58,7 @@ export default function PatientsPage() {
           </svg>
           <input
             type="text"
-            placeholder="Search patients..."
+            placeholder="Pesquisar pacientes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -63,10 +69,10 @@ export default function PatientsPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-3 py-2.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="inactive">Inactive</option>
+          <option value="all">Todos os Status</option>
+          <option value="active">Ativo</option>
+          <option value="pending">Pendente</option>
+          <option value="inactive">Inativo</option>
         </select>
       </div>
 
@@ -75,13 +81,13 @@ export default function PatientsPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Contact</th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Condition</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Contato</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Condição</th>
                 <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Next Appt</th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Sessions</th>
-                <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Próxima Consulta</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Sessões</th>
+                <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -94,7 +100,7 @@ export default function PatientsPage() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">{patient.name}</p>
-                        <p className="text-xs text-gray-500">Age {patient.age}</p>
+                        <p className="text-xs text-gray-500">{patient.age} anos</p>
                       </div>
                     </div>
                   </td>
@@ -107,7 +113,7 @@ export default function PatientsPage() {
                   </td>
                   <td className="px-5 py-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[patient.status]}`}>
-                      {patient.status.charAt(0).toUpperCase() + patient.status.slice(1)}
+                      {statusLabels[patient.status] || patient.status}
                     </span>
                   </td>
                   <td className="px-5 py-4 hidden lg:table-cell">
@@ -136,7 +142,7 @@ export default function PatientsPage() {
               <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
             </svg>
-            <p className="mt-3 text-sm text-gray-500">No patients found</p>
+            <p className="mt-3 text-sm text-gray-500">Nenhum paciente encontrado</p>
           </div>
         )}
       </div>

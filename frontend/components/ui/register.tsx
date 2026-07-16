@@ -17,7 +17,7 @@ const Register: React.FC = () => {
             <div className="hidden lg:block lg:w-1/2">
                 <img
                     src="/register.png"
-                    alt="Register"
+                    alt="Cadastro"
                     className="w-full h-screen object-cover"
                 />
             </div>
@@ -28,8 +28,8 @@ const Register: React.FC = () => {
                         <div className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-6">
                             <ShieldIcon />
                         </div>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Sign Up</h2>
-                        <p className="mt-2 text-gray-600 dark:text-gray-400">Create your secure account</p>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Criar Conta</h2>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400">Crie sua conta segura</p>
                     </div>
 
                     <div className="space-y-3">
@@ -39,7 +39,7 @@ const Register: React.FC = () => {
                             className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium"
                         >
                             <GoogleIcon />
-                            <span className="ml-3">Continue with Google</span>
+                            <span className="ml-3">Cadastrar com Google</span>
                         </button>
                     </div>
 
@@ -48,14 +48,14 @@ const Register: React.FC = () => {
                             <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white dark:bg-black text-gray-500 dark:text-gray-400">Or sign up with email</span>
+                            <span className="px-2 bg-white dark:bg-black text-gray-500 dark:text-gray-400">Ou cadastre-se com e-mail</span>
                         </div>
                     </div>
 
                     <form className="space-y-6">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Email address
+                                Endereço de e-mail
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
@@ -66,7 +66,7 @@ const Register: React.FC = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="you@example.com"
+                                    placeholder="voce@exemplo.com"
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200"
                                 />
                             </div>
@@ -74,7 +74,7 @@ const Register: React.FC = () => {
 
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Password
+                                Senha
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
@@ -85,7 +85,7 @@ const Register: React.FC = () => {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter your password"
+                                    placeholder="Digite sua senha"
                                     className="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200"
                                 />
                                 <button
@@ -106,11 +106,11 @@ const Register: React.FC = () => {
                                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-900"
                                 />
                                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                                    Keep me signed in
+                                    Manter conectado
                                 </label>
                             </div>
-                            <a href="#" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
-                                Reset password
+                            <a href="/forgot-password" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+                                Redefinir senha
                             </a>
                         </div>
 
@@ -119,15 +119,15 @@ const Register: React.FC = () => {
                             onClick={() => signIn("keycloak", { callbackUrl: "/dashboard", popup: true })}
                             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-semibold py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transform transition-all duration-200 hover:scale-[1.01] shadow-lg"
                         >
-                            Sign up to your account
+                            Criar sua conta
                         </button>
                     </form>
 
                     <div className="text-center">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Already have an account?{' '}
+                        Já tem uma conta?{' '}
                         <a href="/login" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
-                            Sign in
+                            Entrar
                         </a>
                         </p>
                     </div>

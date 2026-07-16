@@ -8,9 +8,9 @@ import { Toaster } from "@/components/ui/sonner";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Clinly — Clinic Management",
+  title: "Clinly — Gestão de Clínica",
   description:
-    "Manage psychology clinics efficiently with tools for scheduling, patient records, and reporting.",
+    "Gerencie clínicas de psicologia de forma eficiente com ferramentas de agendamento, prontuários e relatórios.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       className={cn("h-full antialiased", geist.variable, "font-sans")}
     >
       <body className="min-h-full flex flex-col">

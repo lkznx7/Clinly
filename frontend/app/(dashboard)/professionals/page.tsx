@@ -3,11 +3,16 @@
 import { useState } from "react";
 
 const professionalsData = [
-  { id: "1", initials: "AC", name: "Dr. Ana Costa", specialty: "Clinical Psychology", patients: 42, appointments: 18, rating: 4.9, status: "active", email: "ana.costa@clinly.com", phone: "(11) 98888-1111", since: "2022-03-15", specializations: ["CBT", "Anxiety", "Depression"] },
-  { id: "2", initials: "PL", name: "Dr. Pedro Lima", specialty: "Psychiatry", patients: 38, appointments: 15, rating: 4.8, status: "active", email: "pedro.lima@clinly.com", phone: "(11) 98888-2222", since: "2021-08-01", specializations: ["Bipolar", "ADHD", "Psychopharmacology"] },
-  { id: "3", initials: "RB", name: "Dra. Renata Barros", specialty: "Child Psychology", patients: 30, appointments: 12, rating: 4.7, status: "active", email: "renata.barros@clinly.com", phone: "(11) 98888-3333", since: "2023-01-10", specializations: ["Child Therapy", "Play Therapy", "ADHD"] },
-  { id: "4", initials: "MS", name: "Dr. Marcos Souza", specialty: "Neuropsychology", patients: 25, appointments: 10, rating: 4.6, status: "inactive", email: "marcos.souza@clinly.com", phone: "(11) 98888-4444", since: "2022-11-20", specializations: ["Neuropsych Assessment", "TBI", "Dementia"] },
+  { id: "1", initials: "AC", name: "Dr. Ana Costa", specialty: "Psicologia Clínica", patients: 42, appointments: 18, rating: 4.9, status: "active", email: "ana.costa@clinly.com", phone: "(11) 98888-1111", since: "2022-03-15", specializations: ["TCC", "Ansiedade", "Depressão"] },
+  { id: "2", initials: "PL", name: "Dr. Pedro Lima", specialty: "Psiquiatria", patients: 38, appointments: 15, rating: 4.8, status: "active", email: "pedro.lima@clinly.com", phone: "(11) 98888-2222", since: "2021-08-01", specializations: ["Bipolar", "TDAH", "Psicofarmacologia"] },
+  { id: "3", initials: "RB", name: "Dra. Renata Barros", specialty: "Psicologia Infantil", patients: 30, appointments: 12, rating: 4.7, status: "active", email: "renata.barros@clinly.com", phone: "(11) 98888-3333", since: "2023-01-10", specializations: ["Terapia Infantil", "Psicoterapia", "TDAH"] },
+  { id: "4", initials: "MS", name: "Dr. Marcos Souza", specialty: "Neuropsicologia", patients: 25, appointments: 10, rating: 4.6, status: "inactive", email: "marcos.souza@clinly.com", phone: "(11) 98888-4444", since: "2022-11-20", specializations: ["Avaliação Neuropsicológica", "TCCE", "Demência"] },
 ];
+
+const statusLabels: Record<string, string> = {
+  active: "Ativo",
+  inactive: "Inativo",
+};
 
 export default function ProfessionalsPage() {
   const [search, setSearch] = useState("");
@@ -30,15 +35,15 @@ export default function ProfessionalsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Professionals</h1>
-          <p className="text-gray-500 mt-1">Manage your team</p>
+          <h1 className="text-2xl font-bold text-gray-900">Profissionais</h1>
+          <p className="text-gray-500 mt-1">Gerencie sua equipe</p>
         </div>
         <button className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm">
           <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" x2="12" y1="5" y2="19" />
             <line x1="5" x2="19" y1="12" y2="12" />
           </svg>
-          Add Professional
+          Cadastrar Profissional
         </button>
       </div>
 
@@ -48,15 +53,15 @@ export default function ProfessionalsPage() {
           <p className="text-2xl font-bold text-gray-900 mt-1">{totalStats.total}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Active</p>
+          <p className="text-sm text-gray-500">Ativos</p>
           <p className="text-2xl font-bold text-green-600 mt-1">{totalStats.active}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Total Patients</p>
+          <p className="text-sm text-gray-500">Total Pacientes</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{totalStats.totalPatients}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Avg. Rating</p>
+          <p className="text-sm text-gray-500">Avaliação Média</p>
           <p className="text-2xl font-bold text-yellow-600 mt-1">{totalStats.avgRating}</p>
         </div>
       </div>
@@ -69,7 +74,7 @@ export default function ProfessionalsPage() {
           </svg>
           <input
             type="text"
-            placeholder="Search professionals..."
+            placeholder="Pesquisar profissionais..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -80,9 +85,9 @@ export default function ProfessionalsPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-3 py-2.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="all">Todos os Status</option>
+          <option value="active">Ativo</option>
+          <option value="inactive">Inativo</option>
         </select>
       </div>
 
@@ -108,22 +113,22 @@ export default function ProfessionalsPage() {
                   pro.status === "active" ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"
                 }`}
               >
-                {pro.status.charAt(0).toUpperCase() + pro.status.slice(1)}
+                {statusLabels[pro.status] || pro.status}
               </span>
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="text-center">
                 <p className="text-lg font-bold text-gray-900">{pro.patients}</p>
-                <p className="text-xs text-gray-500">Patients</p>
+                <p className="text-xs text-gray-500">Pacientes</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-gray-900">{pro.appointments}</p>
-                <p className="text-xs text-gray-500">Appts/Week</p>
+                <p className="text-xs text-gray-500">Consultas/Sem</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-gray-900">{pro.since.split("-")[0]}</p>
-                <p className="text-xs text-gray-500">Since</p>
+                <p className="text-xs text-gray-500">Desde</p>
               </div>
             </div>
 
@@ -146,7 +151,7 @@ export default function ProfessionalsPage() {
             <path d="M12 6V2H8" />
             <path d="m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z" />
           </svg>
-          <p className="mt-3 text-sm text-gray-500">No professionals found</p>
+          <p className="mt-3 text-sm text-gray-500">Nenhum profissional encontrado</p>
         </div>
       )}
     </div>

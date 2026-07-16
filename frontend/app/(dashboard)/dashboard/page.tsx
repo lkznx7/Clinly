@@ -5,28 +5,37 @@ import { useSession } from "next-auth/react";
 export default function DashboardPage() {
   const { data: session } = useSession();
 
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+
   const stats = [
-    { name: "Total Patients", value: "248", change: "+12%", up: true },
-    { name: "Today's Sessions", value: "8", subtext: "3 remaining" },
-    { name: "Monthly Revenue", value: "$12,450", change: "+8%", up: true },
-    { name: "Avg. Satisfaction", value: "4.8", change: "+0.2", up: true },
+    { name: "Total de Pacientes", value: "248", change: "+12%", up: true },
+    { name: "Sessões Hoje", value: "8", subtext: "3 restantes" },
+    { name: "Receita Mensal", value: "R$ 12.450", change: "+8%", up: true },
+    { name: "Satisfação Média", value: "4.8", change: "+0.2", up: true },
   ];
 
   const todayAppointments = [
-    { time: "09:00", patient: "Maria Silva", type: "Follow-up", status: "completed", professional: "Dr. Ana Costa" },
-    { time: "10:00", patient: "João Santos", type: "Initial Consultation", status: "completed", professional: "Dr. Ana Costa" },
-    { time: "11:30", patient: "Lucia Ferreira", type: "Routine", status: "in-progress", professional: "Dr. Pedro Lima" },
-    { time: "14:00", patient: "Carlos Mendes", type: "Follow-up", status: "scheduled", professional: "Dr. Ana Costa" },
-    { time: "15:30", patient: "Ana Oliveira", type: "Emergency", status: "scheduled", professional: "Dr. Pedro Lima" },
+    { time: "09:00", patient: "Maria Silva", type: "Retorno", status: "completed", professional: "Dr. Ana Costa" },
+    { time: "10:00", patient: "João Santos", type: "Primeira Consulta", status: "completed", professional: "Dr. Ana Costa" },
+    { time: "11:30", patient: "Lucia Ferreira", type: "Rotina", status: "in-progress", professional: "Dr. Pedro Lima" },
+    { time: "14:00", patient: "Carlos Mendes", type: "Retorno", status: "scheduled", professional: "Dr. Ana Costa" },
+    { time: "15:30", patient: "Ana Oliveira", type: "Urgência", status: "scheduled", professional: "Dr. Pedro Lima" },
   ];
+
+  const statusLabels: Record<string, string> = {
+    completed: "Concluída",
+    "in-progress": "Em Andamento",
+    scheduled: "Agendada",
+  };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          Good {new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening"}, {session?.user?.name?.split(" ")[0] || "Doctor"}
+          {greeting}, {session?.user?.name?.split(" ")[0] || "Doutor(a)"}
         </h1>
-        <p className="text-gray-500 mt-1">Here&apos;s what&apos;s happening at your clinic today.</p>
+        <p className="text-gray-500 mt-1">Veja o que está acontecendo na sua clínica hoje.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -52,8 +61,8 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200">
           <div className="px-5 py-4 border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Today&apos;s Schedule</h2>
-              <span className="text-sm text-gray-500">{todayAppointments.length} appointments</span>
+              <h2 className="text-lg font-semibold text-gray-900">Agenda de Hoje</h2>
+              <span className="text-sm text-gray-500">{todayAppointments.length} consultas</span>
             </div>
           </div>
           <div className="divide-y divide-gray-100">
@@ -73,7 +82,7 @@ export default function DashboardPage() {
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >
-                  {apt.status === "in-progress" ? "In Progress" : apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                  {statusLabels[apt.status] || apt.status}
                 </span>
               </div>
             ))}
@@ -82,22 +91,27 @@ export default function DashboardPage() {
 
         <div className="bg-white rounded-xl border border-gray-200">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">Weekly Overview</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Visão Semanal</h2>
           </div>
           <div className="p-5 space-y-4">
-            {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day, i) => {
-              const values = [6, 8, 5, 9, 7];
+            {[
+              { day: "Seg", value: 6 },
+              { day: "Ter", value: 8 },
+              { day: "Qua", value: 5 },
+              { day: "Qui", value: 9 },
+              { day: "Sex", value: 7 },
+            ].map((item) => {
               const max = 10;
               return (
-                <div key={day} className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-gray-500 w-8">{day}</span>
+                <div key={item.day} className="flex items-center gap-3">
+                  <span className="text-xs font-medium text-gray-500 w-8">{item.day}</span>
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"
-                      style={{ width: `${(values[i] / max) * 100}%` }}
+                      style={{ width: `${(item.value / max) * 100}%` }}
                     />
                   </div>
-                  <span className="text-xs text-gray-500 w-6 text-right">{values[i]}</span>
+                  <span className="text-xs text-gray-500 w-6 text-right">{item.value}</span>
                 </div>
               );
             })}

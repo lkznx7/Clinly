@@ -35,7 +35,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
               </svg>
               <input
                 type="text"
-                placeholder="Search patients, appointments..."
+                placeholder="Pesquisar pacientes, consultas..."
                 className="w-80 pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
@@ -60,7 +60,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
                 .toUpperCase() || "U"}
             </div>
             <span className="text-sm font-medium text-gray-700">
-              {user?.name || "User"}
+              {user?.name || "Usuário"}
             </span>
           </div>
 

@@ -6,17 +6,17 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<"profile" | "clinic" | "notifications" | "security">("profile");
 
   const tabs = [
-    { id: "profile" as const, label: "Profile" },
-    { id: "clinic" as const, label: "Clinic" },
-    { id: "notifications" as const, label: "Notifications" },
-    { id: "security" as const, label: "Security" },
+    { id: "profile" as const, label: "Perfil" },
+    { id: "clinic" as const, label: "Clínica" },
+    { id: "notifications" as const, label: "Notificações" },
+    { id: "security" as const, label: "Segurança" },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 mt-1">Manage your account and preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900">Configurações</h1>
+        <p className="text-gray-500 mt-1">Gerencie sua conta e preferências</p>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200">
@@ -47,47 +47,47 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <button className="px-4 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    Change photo
+                    Alterar foto
                   </button>
-                  <p className="text-xs text-gray-500 mt-1">JPG, PNG. Max 2MB.</p>
+                  <p className="text-xs text-gray-500 mt-1">JPG, PNG. Máx. 2MB.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">First name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Nome</label>
                   <input type="text" defaultValue="John" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Last name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Sobrenome</label>
                   <input type="text" defaultValue="Doe" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">E-mail</label>
                   <input type="email" defaultValue="john.doe@clinly.com" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Telefone</label>
                   <input type="tel" defaultValue="(11) 99999-0000" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Title</label>
-                  <input type="text" defaultValue="Clinical Psychologist" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Cargo</label>
+                  <input type="text" defaultValue="Psicólogo(a) Clínico(a)" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">License #</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Registro</label>
                   <input type="text" defaultValue="CRP 12345" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Bio</label>
-                <textarea rows={3} defaultValue="Experienced clinical psychologist specializing in cognitive behavioral therapy." className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none" />
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Biografia</label>
+                <textarea rows={3} defaultValue="Psicólogo(a) clínico(a) com experiência em terapia cognitivo-comportamental." className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none" />
               </div>
 
               <div className="flex justify-end">
                 <button className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm">
-                  Save changes
+                  Salvar alterações
                 </button>
               </div>
             </div>
@@ -97,15 +97,15 @@ export default function SettingsPage() {
             <div className="max-w-2xl space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Clinic name</label>
-                  <input type="text" defaultValue="Clinly Psychology" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Nome da clínica</label>
+                  <input type="text" defaultValue="Clinly Psicologia" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-                  <input type="email" defaultValue="contact@clinly.com" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">E-mail</label>
+                  <input type="email" defaultValue="contato@clinly.com" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Telefone</label>
                   <input type="tel" defaultValue="(11) 3000-1234" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
@@ -115,47 +115,47 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Endereço</label>
                 <input type="text" defaultValue="Rua Augusta, 1234 - São Paulo, SP" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Timezone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Fuso horário</label>
                   <select className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option>America/Sao_Paulo</option>
                     <option>America/New_York</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Currency</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Moeda</label>
                   <select className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option>BRL (R$)</option>
                     <option>USD ($)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Language</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Idioma</label>
                   <select className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option>Portuguese</option>
-                    <option>English</option>
-                    <option>Spanish</option>
+                    <option>Português</option>
+                    <option>Inglês</option>
+                    <option>Espanhol</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Working Hours</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Horário de Funcionamento</h3>
                 <div className="space-y-2">
-                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => (
+                  {["Segunda", "Terça", "Quarta", "Quinta", "Sexta"].map((day) => (
                     <div key={day} className="flex items-center gap-4">
                       <span className="w-24 text-sm text-gray-600">{day}</span>
                       <input type="time" defaultValue="08:00" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                      <span className="text-gray-400">to</span>
+                      <span className="text-gray-400">até</span>
                       <input type="time" defaultValue="18:00" className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                       <label className="flex items-center gap-2">
                         <input type="checkbox" defaultChecked className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" />
-                        <span className="text-xs text-gray-500">Active</span>
+                        <span className="text-xs text-gray-500">Ativo</span>
                       </label>
                     </div>
                   ))}
@@ -164,7 +164,7 @@ export default function SettingsPage() {
 
               <div className="flex justify-end">
                 <button className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm">
-                  Save changes
+                  Salvar alterações
                 </button>
               </div>
             </div>
@@ -174,10 +174,10 @@ export default function SettingsPage() {
             <div className="max-w-2xl space-y-6">
               <div className="space-y-4">
                 {[
-                  { category: "Appointments", desc: "Get notified about upcoming and changed appointments" },
-                  { category: "Patients", desc: "Notifications about patient registrations and updates" },
-                  { category: "System", desc: "System updates, maintenance, and security alerts" },
-                  { category: "Billing", desc: "Payment confirmations and billing reminders" },
+                  { category: "Consultas", desc: "Receba notificações sobre consultas próximas e alterações" },
+                  { category: "Pacientes", desc: "Notificações sobre cadastros e atualizações de pacientes" },
+                  { category: "Sistema", desc: "Atualizações do sistema, manutenção e alertas de segurança" },
+                  { category: "Faturamento", desc: "Confirmações de pagamento e lembretes de faturamento" },
                 ].map((item) => (
                   <div key={item.category} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
@@ -187,7 +187,7 @@ export default function SettingsPage() {
                     <div className="flex items-center gap-4">
                       <label className="flex items-center gap-1.5">
                         <input type="checkbox" defaultChecked className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" />
-                        <span className="text-xs text-gray-500">Email</span>
+                        <span className="text-xs text-gray-500">E-mail</span>
                       </label>
                       <label className="flex items-center gap-1.5">
                         <input type="checkbox" defaultChecked className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" />
@@ -200,7 +200,7 @@ export default function SettingsPage() {
 
               <div className="flex justify-end">
                 <button className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm">
-                  Save preferences
+                  Salvar preferências
                 </button>
               </div>
             </div>
@@ -209,43 +209,43 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="max-w-2xl space-y-8">
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-4">Change Password</h3>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Alterar Senha</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Current password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Senha atual</label>
                     <input type="password" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">New password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Nova senha</label>
                     <input type="password" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirm new password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirmar nova senha</label>
                     <input type="password" className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                   </div>
                   <div className="flex justify-end">
                     <button className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
-                      Update password
+                      Atualizar senha
                     </button>
                   </div>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-4">Two-Factor Authentication</h3>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Autenticação em Duas Etapas</h3>
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Authenticator App</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Use an authenticator app to generate one-time codes</p>
+                    <p className="text-sm font-medium text-gray-900">Aplicativo Autenticador</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Use um aplicativo autenticador para gerar códigos únicos</p>
                   </div>
                   <button className="px-4 py-2 text-sm font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    Enable
+                    Ativar
                   </button>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-4">Active Sessions</h3>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Sessões Ativas</h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
@@ -258,19 +258,19 @@ export default function SettingsPage() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">Windows — Chrome</p>
-                        <p className="text-xs text-gray-500">São Paulo, Brazil • Current session</p>
+                        <p className="text-xs text-gray-500">São Paulo, Brasil • Sessão atual</p>
                       </div>
                     </div>
-                    <span className="text-xs text-green-600 font-medium">Active</span>
+                    <span className="text-xs text-green-600 font-medium">Ativa</span>
                   </div>
                 </div>
               </div>
 
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-red-600 mb-2">Danger Zone</h3>
-                <p className="text-xs text-gray-500 mb-4">Permanently delete your account and all associated data.</p>
+                <h3 className="text-sm font-medium text-red-600 mb-2">Zona de Perigo</h3>
+                <p className="text-xs text-gray-500 mb-4">Excluir permanentemente sua conta e todos os dados associados.</p>
                 <button className="px-4 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
-                  Delete account
+                  Excluir conta
                 </button>
               </div>
             </div>

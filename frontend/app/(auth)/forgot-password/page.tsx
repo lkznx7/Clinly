@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
       <div className="hidden lg:block lg:w-1/2">
         <img
           src="/login.png"
-          alt="Reset Password"
+          alt="Redefinir Senha"
           className="w-full h-screen object-cover"
         />
       </div>
@@ -24,10 +24,10 @@ export default function ForgotPasswordPage() {
               <ShieldIcon />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Reset Password
+              Redefinir Senha
             </h2>
             <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Enter your email to receive a reset link
+              Informe seu e-mail para receber um link de redefinição
             </p>
           </div>
 
@@ -40,10 +40,10 @@ export default function ForgotPasswordPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Check your email
+                Verifique seu e-mail
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                We sent a password reset link to{" "}
+                Enviamos um link de redefinição de senha para{" "}
                 <span className="font-medium text-gray-900 dark:text-white">{email}</span>
               </p>
               <button
@@ -51,7 +51,7 @@ export default function ForgotPasswordPage() {
                 onClick={() => setSubmitted(false)}
                 className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500"
               >
-                Didn&apos;t receive the email? Try again
+                Não recebeu o e-mail? Tentar novamente
               </button>
             </div>
           ) : (
@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
-                  Email address
+                  Endereço de e-mail
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="voce@exemplo.com"
                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200"
                   />
                 </div>
@@ -89,19 +89,19 @@ export default function ForgotPasswordPage() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-semibold py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transform transition-all duration-200 hover:scale-[1.01] shadow-lg"
               >
-                Send reset link
+                Enviar link de redefinição
               </button>
             </form>
           )}
 
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Remember your password?{" "}
+              Lembra sua senha?{" "}
               <a
                 href="/login"
                 className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
               >
-                Sign in
+                Entrar
               </a>
             </p>
           </div>
