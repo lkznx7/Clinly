@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Next.js ###
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+frontend/tsconfig.tsbuildinfo
+
+### Dependencies ###
+frontend/node_modules/
+
+### Environment ###
+frontend/.env*.local
+!frontend/.env.example
+
+### Build ###
+frontend/dist/
+
+### IDE ###
+frontend/.idea/
+
+### OS ###
+.DS_Store
+Thumbs.db
