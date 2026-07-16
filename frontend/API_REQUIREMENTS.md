@@ -1,410 +1,410 @@
-# Clinly — Backend API Requirements
+# Clinly — Requisitos da API Backend
 
-> Derived from frontend analysis of all 23 screens, forms, tables, and user flows.
+> Gerado a partir da análise do frontend com todas as 23 telas, formulários, tabelas e fluxos de usuário.
 
 ---
 
-## 1. Authentication
+## 1. Autenticação
 
 ### Login
 **POST /auth/login**
 
-Purpose: Authenticate user with email/password.
+Finalidade: Autenticar usuário com e-mail/senha.
 
-Request:
+Requisição:
 ```
 { email: string, password: string }
 ```
 
-Response:
+Resposta:
 ```
 { accessToken, refreshToken, user: { id, name, email, role } }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-### Register
+### Cadastro
 **POST /auth/register**
 
-Purpose: Create a new user account.
+Finalidade: Criar uma nova conta de usuário.
 
-Request:
+Requisição:
 ```
 { firstName, lastName, email, password, clinicName? }
 ```
 
-Response:
+Resposta:
 ```
 { userId, emailVerificationRequired: boolean }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-### Social Login (OAuth)
+### Login Social (OAuth)
 **POST /auth/oauth/:provider**
 
-Purpose: Authenticate via Keycloak/Google/GitHub.
+Finalidade: Autenticar via Keycloak/Google/GitHub.
 
-Request:
+Requisição:
 ```
 { provider: "keycloak" | "google" | "github", code: string, redirectUri: string }
 ```
 
-Response:
+Resposta:
 ```
 { accessToken, refreshToken, user: { id, name, email, role } }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-### Forgot Password
+### Esqueci Minha Senha
 **POST /auth/forgot-password**
 
-Purpose: Send password reset email.
+Finalidade: Enviar e-mail de redefinição de senha.
 
-Request:
+Requisição:
 ```
 { email: string }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "Reset link sent" }
+{ message: "Link de redefinição enviado" }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-### Reset Password
+### Redefinir Senha
 **POST /auth/reset-password**
 
-Purpose: Reset password with token.
+Finalidade: Redefinir senha com token.
 
-Request:
+Requisição:
 ```
 { token: string, newPassword: string }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "Password updated" }
+{ message: "Senha atualizada" }
 ```
 
-Authentication: Public (with valid token)
+Autenticação: Pública (com token válido)
 
 ---
 
-### Verify Email
+### Verificar E-mail
 **POST /auth/verify-email**
 
-Purpose: Verify email with 6-digit OTP.
+Finalidade: Verificar e-mail com código OTP de 6 dígitos.
 
-Request:
+Requisição:
 ```
 { email: string, code: string }
 ```
 
-Response:
+Resposta:
 ```
 { verified: boolean }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-### Resend Verification
+### Reenviar Verificação
 **POST /auth/resend-verification**
 
-Purpose: Resend email verification code.
+Finalidade: Reenviar código de verificação por e-mail.
 
-Request:
+Requisição:
 ```
 { email: string }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "Code resent", expiresIn: 60 }
+{ message: "Código reenviado", expiresIn: 60 }
 ```
 
-Authentication: Public
+Autenticação: Pública
 
 ---
 
-## 2. Users (Current User)
+## 2. Usuários (Usuário Atual)
 
-### Get Profile
+### Obter Perfil
 **GET /users/me**
 
-Purpose: Get current user's profile.
+Finalidade: Obter o perfil do usuário atual.
 
-Response:
+Resposta:
 ```
 { id, firstName, lastName, email, phone, title, license, bio, avatar, language, dateFormat }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Update Profile
+### Atualizar Perfil
 **PUT /users/me**
 
-Purpose: Update current user's profile.
+Finalidade: Atualizar o perfil do usuário atual.
 
-Request:
+Requisição:
 ```
 { firstName?, lastName?, email?, phone?, title?, license?, bio?, language?, dateFormat? }
 ```
 
-Response:
+Resposta:
 ```
 { user }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Upload Avatar
+### Enviar Foto de Perfil
 **POST /users/me/avatar**
 
-Purpose: Upload profile photo.
+Finalidade: Enviar foto de perfil.
 
-Request: `multipart/form-data` with `file`
+Requisição: `multipart/form-data` com `file`
 
-Response:
+Resposta:
 ```
 { avatarUrl: string }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Change Password
+### Alterar Senha
 **POST /users/me/change-password**
 
-Purpose: Change current user's password.
+Finalidade: Alterar a senha do usuário atual.
 
-Request:
+Requisição:
 ```
 { currentPassword, newPassword }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "Password updated" }
+{ message: "Senha atualizada" }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Enable 2FA
+### Ativar Autenticação em Duas Etapas
 **POST /users/me/2fa/enable**
 
-Purpose: Enable two-factor authentication.
+Finalidade: Ativar autenticação em duas etapas.
 
-Request:
+Requisição:
 ```
 { method: "authenticator" | "sms", secret?: string, code?: string }
 ```
 
-Response:
+Resposta:
 ```
 { qrCode?: string, backupCodes?: string[] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Disable 2FA
+### Desativar Autenticação em Duas Etapas
 **POST /users/me/2fa/disable**
 
-Purpose: Disable two-factor authentication.
+Finalidade: Desativar autenticação em duas etapas.
 
-Request:
+Requisição:
 ```
 { code: string }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "2FA disabled" }
+{ message: "2FA desativada" }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Active Sessions
+### Obter Sessões Ativas
 **GET /users/me/sessions**
 
-Purpose: List active login sessions.
+Finalidade: Listar sessões de login ativas.
 
-Response:
+Resposta:
 ```
 { sessions: [{ id, device, location, lastActive, current }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Revoke Session
+### Revogar Sessão
 **DELETE /users/me/sessions/:id**
 
-Purpose: Revoke a specific session.
+Finalidade: Revogar uma sessão específica.
 
-Response:
+Resposta:
 ```
-{ message: "Session revoked" }
+{ message: "Sessão revogada" }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Revoke All Other Sessions
+### Revogar Todas as Outras Sessões
 **DELETE /users/me/sessions**
 
-Purpose: Revoke all sessions except current.
+Finalidade: Revogar todas as sessões exceto a atual.
 
-Response:
+Resposta:
 ```
-{ message: "All sessions revoked" }
+{ message: "Todas as sessões foram revogadas" }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## 3. Clinic Settings
+## 3. Configurações da Clínica
 
-### Get Clinic Settings
+### Obter Configurações da Clínica
 **GET /clinic/settings**
 
-Purpose: Get clinic configuration.
+Finalidade: Obter a configuração da clínica.
 
-Response:
+Resposta:
 ```
 { name, email, phone, website, address, timezone, currency, language, logo, workingHours: [{ day, start, end, active }] }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Update Clinic Settings
+### Atualizar Configurações da Clínica
 **PUT /clinic/settings**
 
-Purpose: Update clinic configuration.
+Finalidade: Atualizar a configuração da clínica.
 
-Request:
+Requisição:
 ```
 { name?, email?, phone?, website?, address?, timezone?, currency?, language? }
 ```
 
-Response:
+Resposta:
 ```
 { settings }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Upload Clinic Logo
+### Enviar Logo da Clínica
 **POST /clinic/logo**
 
-Purpose: Upload clinic logo.
+Finalidade: Enviar o logo da clínica.
 
-Request: `multipart/form-data` with `file`
+Requisição: `multipart/form-data` com `file`
 
-Response:
+Resposta:
 ```
 { logoUrl: string }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Update Working Hours
+### Atualizar Horário de Funcionamento
 **PUT /clinic/working-hours**
 
-Purpose: Set weekly working hours.
+Finalidade: Definir o horário de funcionamento semanal.
 
-Request:
+Requisição:
 ```
 { hours: [{ day, start, end, active }] }
 ```
 
-Response:
+Resposta:
 ```
 { hours }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Delete Clinic
+### Excluir Clínica
 **DELETE /clinic**
 
-Purpose: Permanently delete clinic and all data.
+Finalidade: Excluir permanentemente a clínica e todos os dados.
 
-Request:
+Requisição:
 ```
 { password: string }
 ```
 
-Response:
+Resposta:
 ```
-{ message: "Clinic deleted" }
+{ message: "Clínica excluída" }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-## 4. Patients
+## 4. Pacientes
 
-### List Patients
+### Listar Pacientes
 **GET /patients**
 
-Purpose: List patients with filters, search, and pagination.
+Finalidade: Listar pacientes com filtros, pesquisa e paginação.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?search=string&status=active|pending|inactive&professional=id&page=1&limit=20
 ```
 
-Response:
+Resposta:
 ```
 { patients: [{ id, initials, name, age, email, phone, condition, status, lastVisit, nextAppt, professional, sessions }], total, page, totalPages }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Patient Details
+### Obter Detalhes do Paciente
 **GET /patients/:id**
 
-Purpose: Get full patient record.
+Finalidade: Obter o prontuário completo do paciente.
 
-Response:
+Resposta:
 ```
 {
   id, initials, name, age, email, phone, address, condition, status,
@@ -415,174 +415,174 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Create Patient
+### Cadastrar Paciente
 **POST /patients**
 
-Purpose: Add a new patient.
+Finalidade: Adicionar um novo paciente.
 
-Request:
+Requisição:
 ```
 { firstName, lastName, dob, gender, email, phone, address, zip,
   emergencyContact, emergencyPhone, condition, professionalId, notes }
 ```
 
-Response:
+Resposta:
 ```
 { patient: { id, ... } }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Update Patient
+### Atualizar Paciente
 **PUT /patients/:id**
 
-Purpose: Update patient information.
+Finalidade: Atualizar as informações do paciente.
 
-Request: Partial fields from create.
+Requisição: Campos parciais do cadastro.
 
-Response:
+Resposta:
 ```
 { patient }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Delete Patient
+### Excluir Paciente
 **DELETE /patients/:id**
 
-Purpose: Soft-delete a patient.
+Finalidade: Excluir um paciente (soft-delete).
 
-Response:
+Resposta:
 ```
-{ message: "Patient deleted" }
+{ message: "Paciente excluído" }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Get Patient Appointments
+### Obter Consultas do Paciente
 **GET /patients/:id/appointments**
 
-Purpose: List all appointments for a patient.
+Finalidade: Listar todas as consultas de um paciente.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?page=1&limit=20
 ```
 
-Response:
+Resposta:
 ```
 { appointments: [{ id, date, time, type, duration, professional, status }], total }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Patient Clinical Notes
+### Obter Notas Clínicas do Paciente
 **GET /patients/:id/notes**
 
-Purpose: List clinical notes for a patient.
+Finalidade: Listar as notas clínicas de um paciente.
 
-Response:
+Resposta:
 ```
 { notes: [{ id, author, authorInitials, date, content }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Create Clinical Note
+### Criar Nota Clínica
 **POST /patients/:id/notes**
 
-Purpose: Add a clinical note.
+Finalidade: Adicionar uma nota clínica.
 
-Request:
+Requisição:
 ```
 { content: string }
 ```
 
-Response:
+Resposta:
 ```
 { note: { id, author, date, content } }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Update Clinical Note
+### Atualizar Nota Clínica
 **PUT /patients/:id/notes/:noteId**
 
-Purpose: Edit a clinical note.
+Finalidade: Editar uma nota clínica.
 
-Request:
+Requisição:
 ```
 { content: string }
 ```
 
-Response:
+Resposta:
 ```
 { note }
 ```
 
-Authentication: Bearer token (author only)
+Autenticação: Token Bearer (apenas o autor)
 
 ---
 
-### Get Patient Medical History
+### Obter Histórico Médico do Paciente
 **GET /patients/:id/history**
 
-Purpose: Get diagnoses, medications, allergies, previous treatments.
+Finalidade: Obter diagnósticos, medicamentos, alergias e tratamentos anteriores.
 
-Response:
+Resposta:
 ```
 { diagnoses: string[], medications: string[], allergies: string[], previousTreatments: string[] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Export Patients
+### Exportar Pacientes
 **GET /patients/export**
 
-Purpose: Export patient list (CSV/PDF).
+Finalidade: Exportar a lista de pacientes (CSV/PDF).
 
-Query params:
+Parâmetros de consulta:
 ```
 ?format=csv|pdf&status=&professional=
 ```
 
-Response: File download
+Resposta: Download de arquivo
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## 5. Professionals
+## 5. Profissionais
 
-### List Professionals
+### Listar Profissionais
 **GET /professionals**
 
-Purpose: List all team members.
+Finalidade: Listar todos os membros da equipe.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?search=string&status=active|inactive
 ```
 
-Response:
+Resposta:
 ```
 {
   professionals: [{ id, initials, name, specialty, patients, appointments, rating, status, email, phone, since }],
@@ -590,16 +590,16 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Professional Profile
+### Obter Perfil do Profissional
 **GET /professionals/:id**
 
-Purpose: Get full professional profile.
+Finalidade: Obter o perfil completo do profissional.
 
-Response:
+Resposta:
 ```
 {
   id, initials, name, specialty, patients, appointments, rating, status,
@@ -609,91 +609,91 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Create Professional
+### Cadastrar Profissional
 **POST /professionals**
 
-Purpose: Add a new team member.
+Finalidade: Adicionar um novo membro à equipe.
 
-Request:
+Requisição:
 ```
 { firstName, lastName, email, phone, specialty, specializations, bio }
 ```
 
-Response:
+Resposta:
 ```
 { professional: { id, ... } }
 ```
 
-Authentication: Bearer token (admin)
+Autenticação: Token Bearer (admin)
 
 ---
 
-### Update Professional
+### Atualizar Profissional
 **PUT /professionals/:id**
 
-Purpose: Update professional profile.
+Finalidade: Atualizar o perfil do profissional.
 
-Request: Partial fields from create.
+Requisição: Campos parciais do cadastro.
 
-Response:
+Resposta:
 ```
 { professional }
 ```
 
-Authentication: Bearer token (self or admin)
+Autenticação: Token Bearer (próprio ou admin)
 
 ---
 
-### Get Professional Patients
+### Obter Pacientes do Profissional
 **GET /professionals/:id/patients**
 
-Purpose: List patients assigned to this professional.
+Finalidade: Listar os pacientes atribuídos a este profissional.
 
-Response:
+Resposta:
 ```
 { patients: [{ id, initials, name, email, condition, sessions, lastVisit, status }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Professional Schedule
+### Obter Agenda do Profissional
 **GET /professionals/:id/schedule**
 
-Purpose: Get weekly availability and booked slots.
+Finalidade: Obter a disponibilidade semanal e horários agendados.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?week=2024-01-22
 ```
 
-Response:
+Resposta:
 ```
 { availability: [{ day, slots: [{ hour, booked }] }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## 6. Appointments
+## 6. Consultas
 
-### List Appointments (Calendar)
+### Listar Consultas (Calendário)
 **GET /appointments**
 
-Purpose: Get appointments for calendar rendering.
+Finalidade: Obter consultas para renderização do calendário.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?view=month|week|day&date=2024-01-22&professional=id
 ```
 
-Response:
+Resposta:
 ```
 {
   appointments: [{ id, patientId, patientName, patientInitials, professionalId, professionalName, type, date, time, duration, status, color }],
@@ -701,16 +701,16 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Appointment Details
+### Obter Detalhes da Consulta
 **GET /appointments/:id**
 
-Purpose: Get full appointment details.
+Finalidade: Obter os detalhes completos de uma consulta.
 
-Response:
+Resposta:
 ```
 {
   id, patient: { id, name }, professional: { id, name },
@@ -719,16 +719,16 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Create Appointment
+### Agendar Consulta
 **POST /appointments**
 
-Purpose: Schedule a new appointment.
+Finalidade: Agendar uma nova consulta.
 
-Request:
+Requisição:
 ```
 {
   patientId, professionalId, type, date, time, duration,
@@ -737,176 +737,176 @@ Request:
 }
 ```
 
-Response:
+Resposta:
 ```
 { appointment: { id, ... } }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Update Appointment
+### Atualizar Consulta
 **PUT /appointments/:id**
 
-Purpose: Reschedule or modify an appointment.
+Finalidade: Reagendar ou modificar uma consulta.
 
-Request:
+Requisição:
 ```
 { date?, time?, duration?, type?, notes? }
 ```
 
-Response:
+Resposta:
 ```
 { appointment }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Cancel Appointment
+### Cancelar Consulta
 **DELETE /appointments/:id**
 
-Purpose: Cancel an appointment.
+Finalidade: Cancelar uma consulta.
 
-Request:
+Requisição:
 ```
 { reason?: string }
 ```
 
-Response:
+Resposta:
 ```
 { appointment: { status: "cancelled" } }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Today's Schedule
+### Obter Agenda do Dia
 **GET /appointments/today**
 
-Purpose: Get today's appointments for dashboard.
+Finalidade: Obter as consultas de hoje para o painel.
 
-Response:
+Resposta:
 ```
 { appointments: [...], count, remaining }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Weekly Stats
+### Obter Estatísticas Semanais
 **GET /appointments/weekly-stats**
 
-Purpose: Get weekly appointment summary (completed/scheduled/cancelled by day).
+Finalidade: Obter o resumo semanal de consultas (concluídas/agendadas/canceladas por dia).
 
-Query params:
+Parâmetros de consulta:
 ```
 ?week=2024-01-15
 ```
 
-Response:
+Resposta:
 ```
 { days: [{ day, completed, scheduled, cancelled }], total }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## 7. Notifications
+## 7. Notificações
 
-### List Notifications
+### Listar Notificações
 **GET /notifications**
 
-Purpose: Get user's notifications.
+Finalidade: Obter as notificações do usuário.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?unreadOnly=false&page=1&limit=20
 ```
 
-Response:
+Resposta:
 ```
 { notifications: [{ id, type, title, message, time, read }], unreadCount }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Mark Notification Read
+### Marcar Notificação como Lida
 **PUT /notifications/:id/read**
 
-Purpose: Mark single notification as read.
+Finalidade: Marcar uma notificação individual como lida.
 
-Response:
+Resposta:
 ```
 { notification: { read: true } }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Mark All Read
+### Marcar Todas como Lidas
 **PUT /notifications/read-all**
 
-Purpose: Mark all notifications as read.
+Finalidade: Marcar todas as notificações como lidas.
 
-Response:
+Resposta:
 ```
-{ message: "All marked as read" }
+{ message: "Todas marcadas como lidas" }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Notification Preferences
+### Obter Preferências de Notificação
 **GET /notifications/preferences**
 
-Purpose: Get user's notification settings.
+Finalidade: Obter as configurações de notificação do usuário.
 
-Response:
+Resposta:
 ```
 { preferences: [{ category, email, sms, push }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Update Notification Preferences
+### Atualizar Preferências de Notificação
 **PUT /notifications/preferences**
 
-Purpose: Update notification settings.
+Finalidade: Atualizar as configurações de notificação.
 
-Request:
+Requisição:
 ```
 { preferences: [{ category, email, sms, push }] }
 ```
 
-Response:
+Resposta:
 ```
 { preferences }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## 8. Reports & Analytics
+## 8. Relatórios e Análises
 
-### Get Dashboard Stats
+### Obter Estatísticas do Painel
 **GET /reports/dashboard**
 
-Purpose: KPIs for dashboard.
+Finalidade: KPIs para o painel de controle.
 
-Response:
+Resposta:
 ```
 {
   totalPatients: { value, delta, deltaType },
@@ -916,115 +916,115 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Revenue Report
+### Obter Relatório de Receita
 **GET /reports/revenue**
 
-Purpose: Revenue data for charts.
+Finalidade: Dados de receita para gráficos.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?period=1mo|3mo|6mo|12mo|YTD
 ```
 
-Response:
+Resposta:
 ```
 { data: [{ month, revenue, appointments }], total, avg, bestMonth, growthRate }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Session Types
+### Obter Tipos de Sessão
 **GET /reports/session-types**
 
-Purpose: Session type distribution.
+Finalidade: Distribuição dos tipos de sessão.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?period=1mo|3mo|6mo|12mo|YTD
 ```
 
-Response:
+Resposta:
 ```
 { types: [{ name, value, color }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Patient Growth
+### Obter Crescimento de Pacientes
 **GET /reports/patient-growth**
 
-Purpose: Patient growth over time.
+Finalidade: Crescimento de pacientes ao longo do tempo.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?period=1mo|3mo|6mo|12mo|YTD
 ```
 
-Response:
+Resposta:
 ```
 { data: [{ month, new, total }] }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Get Revenue Summary
+### Obter Resumo de Receita
 **GET /reports/revenue/summary**
 
-Purpose: Revenue summary stats.
+Finalidade: Estatísticas resumidas de receita.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?period=6mo
 ```
 
-Response:
+Resposta:
 ```
 { total, monthlyAvg, bestMonth: { month, value }, growthRate }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-### Export Report
+### Exportar Relatório
 **GET /reports/export**
 
-Purpose: Export report data.
+Finalidade: Exportar dados do relatório.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?type=revenue|sessions|patients&period=6mo&format=csv|pdf
 ```
 
-Response: File download
+Resposta: Download de arquivo
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
 ## 9. Global
 
-### Global Search
+### Pesquisa Global
 **GET /search**
 
-Purpose: Search across patients, professionals, appointments.
+Finalidade: Pesquisar entre pacientes, profissionais e consultas.
 
-Query params:
+Parâmetros de consulta:
 ```
 ?q=string
 ```
 
-Response:
+Resposta:
 ```
 {
   patients: [{ id, name, condition }],
@@ -1033,47 +1033,47 @@ Response:
 }
 ```
 
-Authentication: Bearer token
+Autenticação: Token Bearer
 
 ---
 
-## Summary
+## Resumo
 
-| Domain | Endpoints | Notes |
-|--------|-----------|-------|
-| Authentication | 7 | Login, register, OAuth, password reset, email verify |
-| Users | 8 | Profile, avatar, password, 2FA, sessions |
-| Clinic | 5 | Settings, logo, hours, delete |
-| Patients | 10 | CRUD, notes, history, export |
-| Professionals | 6 | CRUD, patients, schedule |
-| Appointments | 8 | CRUD, calendar views, stats |
-| Notifications | 5 | List, read, preferences |
-| Reports | 6 | Dashboard, revenue, growth, export |
-| Global | 1 | Search |
+| Domínio | Endpoints | Observações |
+|---------|-----------|-------------|
+| Autenticação | 7 | Login, cadastro, OAuth, redefinição de senha, verificação de e-mail |
+| Usuários | 8 | Perfil, foto, senha, 2FA, sessões |
+| Clínica | 5 | Configurações, logo, horários, exclusão |
+| Pacientes | 10 | CRUD, notas, histórico, exportação |
+| Profissionais | 6 | CRUD, pacientes, agenda |
+| Consultas | 8 | CRUD, visualizações do calendário, estatísticas |
+| Notificações | 5 | Listagem, leitura, preferências |
+| Relatórios | 6 | Painel, receita, crescimento, exportação |
+| Global | 1 | Pesquisa |
 | **Total** | **56** | |
 
 ---
 
-## Recommendations
+## Recomendações
 
-### Missing Backend Features
-1. **Role-based access control** — Frontend shows admin-only actions (delete patient, delete clinic) but no role system exists
-2. **Audit logging** — HIPAA compliance requires tracking who accessed/modified patient data
-3. **File storage service** — Avatar uploads, clinic logos, document attachments need a storage layer
-4. **Email service** — Verification codes, password resets, appointment reminders need email delivery
-5. **SMS service** — 2FA via SMS, appointment reminders
-6. **WebSocket/SSE** — Real-time notifications (currently polling)
-7. **Search indexing** — Global search across entities needs a search engine
+### Funcionalidades Backend Ausentes
+1. **Controle de acesso baseado em funções (RBAC)** — O frontend exibe ações exclusivas de administrador (excluir paciente, excluir clínica), mas não existe um sistema de funções
+2. **Registro de auditoria** — A conformidade com LGPD/HIPAA exige rastreamento de quem acessou/modificou dados de pacientes
+3. **Serviço de armazenamento de arquivos** — Uploads de foto de perfil, logos da clínica e anexos de documentos precisam de uma camada de armazenamento
+4. **Serviço de e-mail** — Códigos de verificação, redefinições de senha e lembretes de consulta precisam de envio de e-mails
+5. **Serviço de SMS** — 2FA via SMS, lembretes de consulta
+6. **WebSocket/SSE** — Notificações em tempo real (atualmente usa polling)
+7. **Indexação de pesquisa** — Pesquisa global entre entidades precisa de um mecanismo de busca
 
-### API Organization Suggestions
-- Use **versioned routes** (`/api/v1/...`) for future-proofing
-- Implement **cursor-based pagination** instead of offset for large datasets
-- Add **field filtering** (`?fields=id,name,email`) to reduce payload size
-- Standardize **error responses** `{ error: { code, message, details } }`
-- Use **UUIDs** instead of sequential IDs for patient/appointment identifiers
-- Add **ETag/If-None-Match** headers for dashboard data caching
+### Sugestões de Organização da API
+- Usar **rotas versionadas** (`/api/v1/...`) para garantir compatibilidade futura
+- Implementar **paginação baseada em cursor** em vez de offset para conjuntos de dados grandes
+- Adicionar **filtragem de campos** (`?fields=id,name,email`) para reduzir o tamanho do payload
+- Padronizar **respostas de erro** `{ error: { code, message, details } }`
+- Usar **UUIDs** em vez de IDs sequenciais para identificadores de paciente/consulta
+- Adicionar cabeçalhos **ETag/If-None-Match** para cache de dados do painel
 
-### Possible Duplicated Endpoints
-- `GET /reports/dashboard` overlaps with individual report endpoints — consider composing client-side
-- `GET /appointments` and `GET /patients/:id/appointments` share filtering logic — use the same service
-- `GET /professionals/:id/patients` is a filtered view of `GET /patients?professional=id`
+### Possíveis Endpoints Duplicados
+- `GET /reports/dashboard` se sobrepõe aos endpoints individuais de relatórios — considerar composição no lado do cliente
+- `GET /appointments` e `GET /patients/:id/appointments` compartilham lógica de filtragem — usar o mesmo serviço
+- `GET /professionals/:id/patients` é uma visualização filtrada de `GET /patients?professional=id`
