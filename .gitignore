@@ -1,56 +1,30 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IDE
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
 
-### Next.js ###
-frontend/.next/
-frontend/out/
-frontend/next-env.d.ts
-frontend/tsconfig.tsbuildinfo
+# Java
+*.class
+*.jar
+target/
+!.mvn/wrapper/maven-wrapper.jar
 
-### Dependencies ###
-frontend/node_modules/
+# Node
+node_modules/
+.next/
+out/
 
-### Environment ###
-frontend/.env*.local
-!frontend/.env.example
+# Env
+.env
+.env.local
+.env.*.local
 
-### Build ###
-frontend/dist/
+# Docker volumes
+postgres_data/
 
-### IDE ###
-frontend/.idea/
-
-### OS ###
+# OS
 .DS_Store
 Thumbs.db
+
+# Build
+*.log

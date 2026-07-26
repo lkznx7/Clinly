@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Clinly Gateway API
+  description: |
+    Spring Cloud Gateway que atua como ponto único de entrada para todos os
+    microserviços do Clinly. O gateway não expõe endpoints REST próprios, mas
+    roteia requisições para os serviços internos.
+
+    ## Roteamento
+
+    | Prefixo              | Serviço de Destino         | Métodos |
+    |----------------------|----------------------------|---------|
+    | /api/auth/**         | auth-service               | *       |
+    | /api/dashboard/**    | dashboard-service          | GET     |
+    | /api/reports/**      | relatorios-service         | GET     |
+    | /api/notifications/**| rabbit-service             | GET     |
+    | /api/professionals/**| profissionais-service      | GET     |
+    | /api/appointments/** | consultas-service          | *       |
+    | /api/patients/**     | pacientes-service          | *       |
+    | /api/staff/**        | equipe-service             | *       |
+
+    ## Segurança
+
+    O gateway valida o token JWT em todas as requisições, exceto para
+    `/api/auth/**` (login/register). A validação é feita via GlobalFilter
+    customizado que extrai o header `Authorization`, verifica a assinatura
+    e repassa os claims nos headers internos.
+
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Base path for all proxied routes
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

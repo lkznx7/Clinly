@@ -60,7 +60,7 @@ export default function EquipePage() {
       size: 10,
       search: debouncedSearch || undefined,
       role: roleFilter !== "ALL" ? (roleFilter as StaffRole) : undefined,
-      sort: "name,asc",
+      sort: "firstName,asc",
     }),
     [page, debouncedSearch, roleFilter]
   );

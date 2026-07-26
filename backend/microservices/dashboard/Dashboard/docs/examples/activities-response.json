@@ -1,0 +1,14 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "type": "APPOINTMENT_CREATED",
+    "description": "Nova consulta agendada para Ana Maria Silva com Dr. Carlos Souza",
+    "timestamp": "2026-07-22T08:30:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "type": "PATIENT_CREATED",
+    "description": "Novo paciente cadastrado: João Pedro Santos",
+    "timestamp": "2026-07-22T08:15:00Z"
+  }
+]

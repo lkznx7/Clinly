@@ -1,0 +1,30 @@
+{
+  "content": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Dr. Carlos Souza",
+      "email": "carlos@clinly.com",
+      "phone": "(11) 99888-7777",
+      "role": "DOCTOR",
+      "specialty": "Clínico Geral",
+      "crm": "12345/SP",
+      "status": "ACTIVE",
+      "avatarUrl": null,
+      "createdAt": "2026-07-22T14:30:00Z",
+      "updatedAt": "2026-07-22T14:30:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 1,
+  "totalPages": 1,
+  "last": true,
+  "first": true,
+  "numberOfElements": 1,
+  "empty": false,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  }
+}

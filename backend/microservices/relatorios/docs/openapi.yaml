@@ -1,0 +1,197 @@
+openapi: 3.0.3
+info:
+  title: Report Service API
+  description: Read-only analytics service providing aggregated reports with date range filtering.
+  version: 1.0.0
+
+servers:
+  - url: /api/reports
+    description: Gateway-prefixed base path
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ReportSummary:
+      type: object
+      properties:
+        totalRevenue:
+          type: number
+          format: double
+          description: Total revenue in the date range
+        totalAppointments:
+          type: integer
+          description: Total appointments in the date range
+        totalPatients:
+          type: integer
+          description: Total unique patients attended
+        cancellationRate:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Rate of cancelled appointments (0-1)
+        noShowRate:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Rate of no-show appointments (0-1)
+
+    ReportChartData:
+      type: object
+      properties:
+        revenueByMonth:
+          type: array
+          items:
+            $ref: '#/components/schemas/RevenueByMonth'
+        appointmentsByMonth:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentsByMonth'
+        appointmentsBySpecialty:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentsBySpecialty'
+        cancellationByMonth:
+          type: array
+          items:
+            $ref: '#/components/schemas/CancellationByMonth'
+
+    RevenueByMonth:
+      type: object
+      properties:
+        month:
+          type: string
+          description: Month label (e.g. 2026-01)
+        revenue:
+          type: number
+          format: double
+
+    AppointmentsByMonth:
+      type: object
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+
+    AppointmentsBySpecialty:
+      type: object
+      properties:
+        specialty:
+          type: string
+        count:
+          type: integer
+
+    CancellationByMonth:
+      type: object
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+paths:
+  /summary:
+    get:
+      tags:
+        - Reports
+      summary: Get report summary
+      description: Returns aggregated KPIs for the given date range.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2026-01-01"
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2026-06-30"
+      responses:
+        '200':
+          description: Report summary data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportSummary'
+        '400':
+          description: Invalid date parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - invalid or missing JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /charts:
+    get:
+      tags:
+        - Reports
+      summary: Get report chart data
+      description: Returns monthly revenue, appointments, specialty breakdown, and cancellations.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2026-01-01"
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2026-06-30"
+      responses:
+        '200':
+          description: Report chart data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportChartData'
+        '400':
+          description: Invalid date parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - invalid or missing JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

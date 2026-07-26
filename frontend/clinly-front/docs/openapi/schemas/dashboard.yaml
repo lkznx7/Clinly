@@ -1,0 +1,51 @@
+# =============================================================================
+# DASHBOARD SCHEMAS — Clinly API
+# =============================================================================
+
+DashboardSummary:
+  description: KPIs principais do dashboard
+  type: object
+  required:
+    - appointmentsToday
+    - activePatients
+    - newPatientsThisMonth
+    - revenueThisMonth
+  properties:
+    appointmentsToday:
+      type: integer
+      minimum: 0
+      description: Número de consultas agendadas para hoje
+    activePatients:
+      type: integer
+      minimum: 0
+      description: Total de pacientes com status ACTIVE
+    newPatientsThisMonth:
+      type: integer
+      minimum: 0
+      description: Novos pacientes cadastrados no mês atual
+    revenueThisMonth:
+      type: number
+      format: double
+      minimum: 0
+      description: Receita total do mês atual
+
+DashboardChartData:
+  description: Dados para os gráficos do dashboard
+  type: object
+  required:
+    - revenueByMonth
+    - appointmentsByType
+    - appointmentsByStatus
+  properties:
+    revenueByMonth:
+      type: array
+      items:
+        $ref: "./dashboard.yaml#/RevenueByMonth"
+    appointmentsByType:
+      type: array
+      items:
+        $ref: "./dashboard.yaml#/AppointmentsByType"
+    appointmentsByStatus:
+      type: array
+      items:
+        $ref: "./dashboard.yaml#/AppointmentsByStatus"

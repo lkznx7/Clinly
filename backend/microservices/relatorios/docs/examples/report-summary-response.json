@@ -1,0 +1,7 @@
+{
+  "totalRevenue": 125000.90,
+  "totalAppointments": 450,
+  "totalPatients": 320,
+  "cancellationRate": 0.05,
+  "noShowRate": 0.03
+}

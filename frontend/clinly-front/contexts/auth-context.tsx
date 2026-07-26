@@ -46,7 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("@App:token", response.token);
         localStorage.setItem("@App:email", response.email);
         localStorage.setItem("@App:role", response.role);
-        setUser({ token: response.token, email: response.email, role: response.role });
+        localStorage.setItem("@App:name", response.name);
+        setUser({ token: response.token, email: response.email, role: response.role, name: response.name });
         router.push("/dashboard");
       } finally {
         setIsLoading(false);

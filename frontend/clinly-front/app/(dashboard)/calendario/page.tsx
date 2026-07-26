@@ -86,7 +86,7 @@ export default function CalendarioPage() {
   }, [viewMode, currentDate]);
 
   const queryParams = useMemo<AppointmentQueryParams>(
-    () => ({ startDate, endDate, size: 200, sort: "date,asc" }),
+    () => ({ startDate, endDate, size: 200, sort: "startAt,asc" }),
     [startDate, endDate]
   );
 

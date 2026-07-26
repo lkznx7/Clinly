@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/contexts/theme-context";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -55,10 +55,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ThemeProvider>
+        <Providers>
           {children}
           <Toaster position="top-right" richColors closeButton />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

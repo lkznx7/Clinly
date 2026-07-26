@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoginSocialButton } from "@/components/auth/login-social-button";
 import { Activity, Eye, EyeOff, ArrowLeft, CheckCircle2 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/contexts/auth-context";
 import { toast } from "sonner";
 
 const registerSchema = z
@@ -55,8 +55,13 @@ export default function RegisterPage() {
     try {
       await registerUser(data.name, data.email, data.password);
       toast.success("Conta criada com sucesso!");
-    } catch {
-      toast.error("Erro ao criar conta. Tente novamente.");
+    } catch (error) {
+      console.error("Erro no registro:", error);
+      if (error instanceof Error && error.message === "Network Error") {
+        toast.error("Servidor indisponível. Verifique se o backend está rodando.");
+      } else {
+        toast.error("Erro ao criar conta. Tente novamente.");
+      }
     }
   };
 

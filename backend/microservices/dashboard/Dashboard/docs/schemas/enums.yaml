@@ -1,0 +1,10 @@
+ActivityType:
+  type: string
+  enum:
+    - PATIENT_CREATED
+    - PATIENT_UPDATED
+    - APPOINTMENT_CREATED
+    - APPOINTMENT_COMPLETED
+    - APPOINTMENT_CANCELLED
+    - STAFF_ADDED
+  description: Tipos de atividade registradas no feed do dashboard.

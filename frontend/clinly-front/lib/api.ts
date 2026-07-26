@@ -20,7 +20,7 @@ import type {
 } from "./types";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -39,13 +39,16 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const status = error.response?.status;
     if (
-      error.response?.status === 401 &&
+      (status === 401 || status === 403) &&
       typeof window !== "undefined" &&
       !error.config?.url?.startsWith("/auth/")
     ) {
       localStorage.removeItem("@App:token");
       localStorage.removeItem("@App:email");
+      localStorage.removeItem("@App:name");
+      localStorage.removeItem("@App:role");
       window.location.href = "/login";
     }
     return Promise.reject(error);
@@ -74,6 +77,7 @@ export type PostLogin = {
 export type PostLoginResponse = {
   token: string;
   email: string;
+  name: string;
   role: "USER" | "ADMIN";
 };
 

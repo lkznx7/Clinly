@@ -55,7 +55,7 @@ export default function PacientesPage() {
       size: 10,
       search: debouncedSearch || undefined,
       status: statusFilter !== "ALL" ? (statusFilter as "ACTIVE" | "INACTIVE" | "ARCHIVED") : undefined,
-      sort: "name,asc",
+      sort: "firstName,asc",
     }),
     [page, debouncedSearch, statusFilter]
   );

@@ -1,0 +1,38 @@
+{
+  "content": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440020",
+      "name": "Dr. Carlos Souza",
+      "email": "carlos@clinly.com",
+      "phone": "(11) 99888-7777",
+      "role": "DOCTOR",
+      "specialty": "Clínico Geral",
+      "crm": "12345/SP",
+      "status": "ACTIVE",
+      "avatarUrl": null,
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440021",
+      "name": "Dra. Mariana Lima",
+      "email": "mariana@clinly.com",
+      "phone": "(11) 99777-6666",
+      "role": "DOCTOR",
+      "specialty": "Pediatria",
+      "crm": "23456/SP",
+      "status": "ACTIVE",
+      "avatarUrl": null,
+      "createdAt": "2026-01-15T00:00:00Z",
+      "updatedAt": "2026-01-15T00:00:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 10,
+  "totalElements": 25,
+  "totalPages": 3,
+  "last": false,
+  "first": true,
+  "numberOfElements": 10,
+  "empty": false
+}

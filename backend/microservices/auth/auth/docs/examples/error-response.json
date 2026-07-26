@@ -1,0 +1,4 @@
+{
+  "error": "Email already in use",
+  "status": 409
+}

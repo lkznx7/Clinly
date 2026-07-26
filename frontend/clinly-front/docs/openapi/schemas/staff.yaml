@@ -1,0 +1,63 @@
+# =============================================================================
+# STAFF SCHEMAS — Clinly API
+# =============================================================================
+
+CreateStaffRequest:
+  description: Dados para adicionar um novo membro à equipe
+  type: object
+  required:
+    - name
+    - email
+    - phone
+    - role
+  properties:
+    name:
+      type: string
+      minLength: 3
+      maxLength: 120
+      description: Nome completo do membro
+    email:
+      type: string
+      format: email
+      maxLength: 255
+      description: Email do membro (deve ser único)
+    phone:
+      type: string
+      minLength: 8
+      maxLength: 20
+      description: Telefone
+    role:
+      $ref: "./enums.yaml#/StaffRole"
+    specialty:
+      type: string
+      maxLength: 100
+      description: Especialidade (principalmente para médicos). O frontend sempre envia (pode ser vazio).
+    crm:
+      type: string
+      maxLength: 20
+      description: "CRM do médico. Obrigatório se role = DOCTOR. Deve ser único. O frontend sempre envia (pode ser vazio)."
+
+UpdateStaffRequest:
+  description: Dados para atualização de membro da equipe (PUT). O frontend sempre envia todos os campos.
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 3
+      maxLength: 120
+    email:
+      type: string
+      format: email
+      maxLength: 255
+    phone:
+      type: string
+      minLength: 8
+      maxLength: 20
+    role:
+      $ref: "./enums.yaml#/StaffRole"
+    specialty:
+      type: string
+      maxLength: 100
+    crm:
+      type: string
+      maxLength: 20

@@ -1,0 +1,66 @@
+# =============================================================================
+# APPOINTMENT SCHEMAS — Clinly API
+# =============================================================================
+
+CreateAppointmentRequest:
+  description: Dados para criação de um novo agendamento
+  type: object
+  required:
+    - patientId
+    - professionalId
+    - date
+    - startTime
+    - endTime
+    - type
+  properties:
+    patientId:
+      type: string
+      format: uuid
+      description: UUID do paciente
+    professionalId:
+      type: string
+      format: uuid
+      description: UUID do profissional (médico)
+    date:
+      type: string
+      format: date
+      description: Data do agendamento (YYYY-MM-DD)
+    startTime:
+      type: string
+      pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+      description: Horário de início (HH:MM). Deve ser anterior a endTime.
+    endTime:
+      type: string
+      pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+      description: Horário de término (HH:MM). Deve ser posterior a startTime.
+    type:
+      $ref: "./enums.yaml#/AppointmentType"
+    notes:
+      type: string
+      maxLength: 1000
+      description: Observações. O frontend sempre envia este campo (pode ser string vazia).
+
+UpdateAppointmentRequest:
+  description: Dados para atualização de agendamento (PUT). O frontend sempre envia todos os campos.
+  type: object
+  properties:
+    patientId:
+      type: string
+      format: uuid
+    professionalId:
+      type: string
+      format: uuid
+    date:
+      type: string
+      format: date
+    startTime:
+      type: string
+      pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+    endTime:
+      type: string
+      pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+    type:
+      $ref: "./enums.yaml#/AppointmentType"
+    notes:
+      type: string
+      maxLength: 1000

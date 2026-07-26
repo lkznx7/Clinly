@@ -42,7 +42,7 @@ export default function DashboardPage() {
     error: appointmentsError,
     refetch: refetchAppointments,
   } = useFetch(() =>
-    getAppointments({ page: 0, size: 5, sort: "startTime,asc" })
+    getAppointments({ page: 0, size: 5, sort: "startAt,asc" })
   );
 
   const hasError = summaryError || chartsError || activitiesError || appointmentsError;
