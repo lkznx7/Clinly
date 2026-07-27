@@ -5,6 +5,9 @@ import type {
   RecentActivity,
   Staff,
   Patient,
+  ReportSummary,
+  ReportChartData,
+  Notification,
 } from "./types";
 
 export const mockDashboardSummary: DashboardSummary = {
@@ -263,5 +266,102 @@ export const mockPatients: Patient[] = [
     nextAppointment: null,
     createdAt: "2026-03-10T10:00:00Z",
     updatedAt: "2026-06-20T14:00:00Z",
+  },
+];
+
+export const mockReportSummary: ReportSummary = {
+  totalRevenue: 285750,
+  totalAppointments: 470,
+  totalPatients: 847,
+  cancellationRate: 5.3,
+  noShowRate: 2.1,
+};
+
+export const mockReportCharts: ReportChartData = {
+  revenueByMonth: [
+    { month: "Jan", revenue: 32000 },
+    { month: "Fev", revenue: 35500 },
+    { month: "Mar", revenue: 38200 },
+    { month: "Abr", revenue: 41000 },
+    { month: "Mai", revenue: 44800 },
+    { month: "Jun", revenue: 48750 },
+    { month: "Jul", revenue: 45500 },
+    { month: "Ago", revenue: 0 },
+    { month: "Set", revenue: 0 },
+    { month: "Out", revenue: 0 },
+    { month: "Nov", revenue: 0 },
+    { month: "Dez", revenue: 0 },
+  ],
+  appointmentsByMonth: [
+    { month: "Jan", count: 65 },
+    { month: "Fev", count: 72 },
+    { month: "Mar", count: 78 },
+    { month: "Abr", count: 85 },
+    { month: "Mai", count: 90 },
+    { month: "Jun", count: 80 },
+    { month: "Jul", count: 0 },
+    { month: "Ago", count: 0 },
+    { month: "Set", count: 0 },
+    { month: "Out", count: 0 },
+    { month: "Nov", count: 0 },
+    { month: "Dez", count: 0 },
+  ],
+  appointmentsBySpecialty: [
+    { specialty: "Clínico Geral", count: 180 },
+    { specialty: "Pediatria", count: 120 },
+    { specialty: "Ortopedia", count: 90 },
+    { specialty: "Cardiologia", count: 80 },
+  ],
+  cancellationByMonth: [
+    { month: "Jan", count: 3 },
+    { month: "Fev", count: 5 },
+    { month: "Mar", count: 2 },
+    { month: "Abr", count: 4 },
+    { month: "Mai", count: 6 },
+    { month: "Jun", count: 3 },
+    { month: "Jul", count: 0 },
+    { month: "Ago", count: 0 },
+    { month: "Set", count: 0 },
+    { month: "Out", count: 0 },
+    { month: "Nov", count: 0 },
+    { month: "Dez", count: 0 },
+  ],
+};
+
+export const mockNotifications: Notification[] = [
+  {
+    id: "n1",
+    title: "Consulta agendada",
+    message: "Nova consulta agendada para amanha as 09:00 com Ana Maria Silva",
+    read: false,
+    createdAt: "2026-07-22T18:00:00Z",
+  },
+  {
+    id: "n2",
+    title: "Paciente confirmou presença",
+    message: "Joao Pedro Santos confirmou presenca na consulta de 22/07 as 09:30",
+    read: false,
+    createdAt: "2026-07-22T16:30:00Z",
+  },
+  {
+    id: "n3",
+    title: "Consulta cancelada",
+    message: "Roberto Nogueira cancelou a consulta agendada para 23/07",
+    read: true,
+    createdAt: "2026-07-22T14:00:00Z",
+  },
+  {
+    id: "n4",
+    title: "Lembrete: retorno",
+    message: "Maria Clara Oliveira tem retorno agendado para 05/08 as 14:00",
+    read: true,
+    createdAt: "2026-07-21T09:00:00Z",
+  },
+  {
+    id: "n5",
+    title: "Novo paciente cadastrado",
+    message: "Pedro Henrique Costa foi cadastrado no sistema",
+    read: true,
+    createdAt: "2026-07-20T15:00:00Z",
   },
 ];

@@ -1,7 +1,0 @@
-{
-  "status": 400,
-  "error": "Bad Request",
-  "message": "startTime must be before endTime",
-  "timestamp": "2026-07-22T10:30:00Z",
-  "path": "/appointments"
-}

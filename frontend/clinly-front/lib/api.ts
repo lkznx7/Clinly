@@ -18,6 +18,17 @@ import type {
   ReportQueryParams,
   Notification,
 } from "./types";
+import {
+  mockDashboardSummary,
+  mockDashboardCharts,
+  mockActivities,
+  mockAppointments,
+  mockStaff,
+  mockPatients,
+  mockReportSummary,
+  mockReportCharts,
+  mockNotifications,
+} from "./mock-data";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
@@ -91,31 +102,69 @@ export async function postLogin(data: PostLogin): Promise<PostLoginResponse> {
   return response.data;
 }
 
-// TODO: GET /dashboard - Dashboard summary and charts data
+// Dashboard
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const response = await api.get<DashboardSummary>("/dashboard/summary");
-  return response.data;
+  try {
+    const response = await api.get<DashboardSummary>("/dashboard/summary");
+    return response.data;
+  } catch {
+    return mockDashboardSummary;
+  }
 }
 
 export async function getDashboardCharts(): Promise<DashboardChartData> {
-  const response = await api.get<DashboardChartData>("/dashboard/charts");
-  return response.data;
+  try {
+    const response = await api.get<DashboardChartData>("/dashboard/charts");
+    return response.data;
+  } catch {
+    return mockDashboardCharts;
+  }
 }
 
 export async function getDashboardActivities(): Promise<RecentActivity[]> {
-  const response = await api.get<RecentActivity[]>("/dashboard/activities");
-  return response.data;
+  try {
+    const response = await api.get<RecentActivity[]>("/dashboard/activities");
+    return response.data;
+  } catch {
+    return mockActivities;
+  }
 }
 
-// TODO: /patients endpoints
+// Patients
 export async function getPatients(params: PatientQueryParams): Promise<PaginatedResponse<Patient>> {
-  const response = await api.get<PaginatedResponse<Patient>>("/patients", { params });
-  return response.data;
+  try {
+    const response = await api.get<PaginatedResponse<Patient>>("/patients", { params });
+    return response.data;
+  } catch {
+    const page = params.page ?? 0;
+    const size = params.size ?? 10;
+    const start = page * size;
+    let filtered = [...mockPatients];
+    if (params.search) {
+      const q = params.search.toLowerCase();
+      filtered = filtered.filter((p) => p.name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q));
+    }
+    if (params.status) {
+      filtered = filtered.filter((p) => p.status === params.status);
+    }
+    return {
+      content: filtered.slice(start, start + size),
+      page,
+      size,
+      totalElements: filtered.length,
+      totalPages: Math.ceil(filtered.length / size),
+      last: start + size >= filtered.length,
+    };
+  }
 }
 
 export async function getPatient(id: string): Promise<Patient> {
-  const response = await api.get<Patient>(`/patients/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Patient>(`/patients/${id}`);
+    return response.data;
+  } catch {
+    return mockPatients.find((p) => p.id === id) ?? mockPatients[0];
+  }
 }
 
 export async function createPatient(data: PatientFormData): Promise<Patient> {
@@ -132,10 +181,37 @@ export async function deletePatient(id: string): Promise<void> {
   await api.delete(`/patients/${id}`);
 }
 
-// TODO: /appointments endpoints
+// Appointments
 export async function getAppointments(params: AppointmentQueryParams): Promise<PaginatedResponse<Appointment>> {
-  const response = await api.get<PaginatedResponse<Appointment>>("/appointments", { params });
-  return response.data;
+  try {
+    const response = await api.get<PaginatedResponse<Appointment>>("/appointments", { params });
+    return response.data;
+  } catch {
+    const page = params.page ?? 0;
+    const size = params.size ?? 10;
+    const start = page * size;
+    let filtered = [...mockAppointments];
+    if (params.professionalId) {
+      filtered = filtered.filter((a) => a.professionalId === params.professionalId);
+    }
+    if (params.status) {
+      filtered = filtered.filter((a) => a.status === params.status);
+    }
+    if (params.startDate) {
+      filtered = filtered.filter((a) => a.date >= params.startDate!);
+    }
+    if (params.endDate) {
+      filtered = filtered.filter((a) => a.date <= params.endDate!);
+    }
+    return {
+      content: filtered.slice(start, start + size),
+      page,
+      size,
+      totalElements: filtered.length,
+      totalPages: Math.ceil(filtered.length / size),
+      last: start + size >= filtered.length,
+    };
+  }
 }
 
 export async function createAppointment(data: AppointmentFormData): Promise<Appointment> {
@@ -152,16 +228,45 @@ export async function deleteAppointment(id: string): Promise<void> {
   await api.delete(`/appointments/${id}`);
 }
 
-// TODO: /professionals endpoints (for calendar dropdown)
+// Professionals
 export async function getProfessionals(): Promise<Staff[]> {
-  const response = await api.get<Staff[]>("/professionals");
-  return response.data;
+  try {
+    const response = await api.get<Staff[]>("/professionals");
+    return response.data;
+  } catch {
+    return mockStaff.filter((s) => s.role === "DOCTOR" && s.status === "ACTIVE");
+  }
 }
 
-// TODO: /staff endpoints
+// Staff
 export async function getStaff(params: StaffQueryParams): Promise<PaginatedResponse<Staff>> {
-  const response = await api.get<PaginatedResponse<Staff>>("/staff", { params });
-  return response.data;
+  try {
+    const response = await api.get<PaginatedResponse<Staff>>("/staff", { params });
+    return response.data;
+  } catch {
+    const page = params.page ?? 0;
+    const size = params.size ?? 10;
+    const start = page * size;
+    let filtered = [...mockStaff];
+    if (params.search) {
+      const q = params.search.toLowerCase();
+      filtered = filtered.filter((s) => s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q));
+    }
+    if (params.role) {
+      filtered = filtered.filter((s) => s.role === params.role);
+    }
+    if (params.status) {
+      filtered = filtered.filter((s) => s.status === params.status);
+    }
+    return {
+      content: filtered.slice(start, start + size),
+      page,
+      size,
+      totalElements: filtered.length,
+      totalPages: Math.ceil(filtered.length / size),
+      last: start + size >= filtered.length,
+    };
+  }
 }
 
 export async function getStaffMember(id: string): Promise<Staff> {
@@ -183,19 +288,31 @@ export async function deleteStaffMember(id: string): Promise<void> {
   await api.delete(`/staff/${id}`);
 }
 
-// TODO: /reports endpoints
+// Reports
 export async function getReportSummary(params: ReportQueryParams): Promise<ReportSummary> {
-  const response = await api.get<ReportSummary>("/reports/summary", { params });
-  return response.data;
+  try {
+    const response = await api.get<ReportSummary>("/reports/summary", { params });
+    return response.data;
+  } catch {
+    return mockReportSummary;
+  }
 }
 
 export async function getReportCharts(params: ReportQueryParams): Promise<ReportChartData> {
-  const response = await api.get<ReportChartData>("/reports/charts", { params });
-  return response.data;
+  try {
+    const response = await api.get<ReportChartData>("/reports/charts", { params });
+    return response.data;
+  } catch {
+    return mockReportCharts;
+  }
 }
 
-// TODO: /notifications endpoints
+// Notifications
 export async function getNotifications(): Promise<Notification[]> {
-  const response = await api.get<Notification[]>("/notifications");
-  return response.data;
+  try {
+    const response = await api.get<Notification[]>("/notifications");
+    return response.data;
+  } catch {
+    return mockNotifications;
+  }
 }

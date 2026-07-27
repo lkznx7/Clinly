@@ -1,7 +1,0 @@
-{
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Validation failed: email must be a well-formed email address",
-  "path": "/api/staff",
-  "timestamp": "2026-07-22T14:30:00Z"
-}
