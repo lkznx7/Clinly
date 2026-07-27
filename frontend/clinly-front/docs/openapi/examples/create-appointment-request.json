@@ -1,0 +1,9 @@
+{
+  "patientId": "550e8400-e29b-41d4-a716-446655440010",
+  "professionalId": "550e8400-e29b-41d4-a716-446655440020",
+  "date": "2026-07-25",
+  "startTime": "09:00",
+  "endTime": "09:30",
+  "type": "CONSULTATION",
+  "notes": "Retorno para controle"
+}

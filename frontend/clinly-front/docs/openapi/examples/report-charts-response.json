@@ -1,0 +1,32 @@
+{
+  "revenueByMonth": [
+    { "month": "Jan", "revenue": 15000.00 },
+    { "month": "Fev", "revenue": 18500.00 },
+    { "month": "Mar", "revenue": 22000.00 },
+    { "month": "Abr", "revenue": 25000.00 },
+    { "month": "Mai", "revenue": 28000.00 },
+    { "month": "Jun", "revenue": 31000.00 }
+  ],
+  "appointmentsByMonth": [
+    { "month": "Jan", "count": 45 },
+    { "month": "Fev", "count": 52 },
+    { "month": "Mar", "count": 60 },
+    { "month": "Abr", "count": 55 },
+    { "month": "Mai", "count": 70 },
+    { "month": "Jun", "count": 68 }
+  ],
+  "appointmentsBySpecialty": [
+    { "specialty": "Cardiologia", "count": 80 },
+    { "specialty": "Ortopedia", "count": 60 },
+    { "specialty": "Pediatria", "count": 45 },
+    { "specialty": "Dermatologia", "count": 35 }
+  ],
+  "cancellationByMonth": [
+    { "month": "Jan", "count": 3 },
+    { "month": "Fev", "count": 2 },
+    { "month": "Mar", "count": 5 },
+    { "month": "Abr", "count": 4 },
+    { "month": "Mai", "count": 6 },
+    { "month": "Jun", "count": 3 }
+  ]
+}

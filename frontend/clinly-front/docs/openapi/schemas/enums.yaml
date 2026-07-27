@@ -1,0 +1,76 @@
+# =============================================================================
+# ENUMS — Clinly API
+# =============================================================================
+# Todos os enums usados pela API. Mapeamento direto dos tipos do frontend.
+
+PatientStatus:
+  description: Status do paciente no sistema
+  type: string
+  enum:
+    - ACTIVE
+    - INACTIVE
+    - ARCHIVED
+
+StaffStatus:
+  description: Status do membro da equipe
+  type: string
+  enum:
+    - ACTIVE
+    - INACTIVE
+    - ON_LEAVE
+
+AppointmentStatus:
+  description: Status do agendamento/consulta
+  type: string
+  enum:
+    - SCHEDULED
+    - CONFIRMED
+    - IN_PROGRESS
+    - COMPLETED
+    - CANCELLED
+    - NO_SHOW
+
+StaffRole:
+  description: Cargo do membro da equipe
+  type: string
+  enum:
+    - DOCTOR
+    - NURSE
+    - RECEPTIONIST
+    - ADMIN
+
+AppointmentType:
+  description: Tipo da consulta/agendamento
+  type: string
+  enum:
+    - CONSULTATION
+    - FOLLOW_UP
+    - EXAM
+    - PROCEDURE
+    - TELEMEDICINE
+
+Gender:
+  description: Gênero do paciente
+  type: string
+  enum:
+    - MALE
+    - FEMALE
+    - OTHER
+
+UserRole:
+  description: Role do usuário no sistema
+  type: string
+  enum:
+    - USER
+    - ADMIN
+
+ActivityType:
+  description: Tipo de atividade registrada no sistema
+  type: string
+  enum:
+    - PATIENT_CREATED
+    - PATIENT_UPDATED
+    - APPOINTMENT_CREATED
+    - APPOINTMENT_COMPLETED
+    - APPOINTMENT_CANCELLED
+    - STAFF_ADDED

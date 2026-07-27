@@ -1,0 +1,27 @@
+{
+  "content": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440030",
+      "patientId": "550e8400-e29b-41d4-a716-446655440010",
+      "patientName": "Ana Maria Silva",
+      "professionalId": "550e8400-e29b-41d4-a716-446655440020",
+      "professionalName": "Dr. Carlos Souza",
+      "date": "2026-07-25",
+      "startTime": "09:00",
+      "endTime": "09:30",
+      "type": "CONSULTATION",
+      "status": "SCHEDULED",
+      "notes": "Retorno para controle",
+      "createdAt": "2026-07-20T10:00:00Z",
+      "updatedAt": "2026-07-20T10:00:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 120,
+  "totalPages": 6,
+  "last": false,
+  "first": true,
+  "numberOfElements": 20,
+  "empty": false
+}

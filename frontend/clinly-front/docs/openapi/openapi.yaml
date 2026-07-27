@@ -1,0 +1,2023 @@
+openapi: 3.1.0
+info:
+  title: Clinly API
+  description: |
+    API do sistema de gestão clínica Clinly.
+
+    Esta especificação OpenAPI 3.1 documenta exatamente os endpoints que o frontend
+    consome. Nenhum endpoint foi inventado — todos foram extraídos da análise
+    completa do código-fonte do frontend (páginas, componentes, hooks, services, tipos).
+
+    ## Autenticação
+
+    A maioria dos endpoints exige autenticação via JWT Bearer Token.
+    O token é obtido através dos endpoints `/auth/login` e `/auth/register`.
+
+    ## Roles
+
+    O frontend armazena a role do usuário mas **não implementa guards de rota**.
+    As roles sugeridas para o backend são:
+
+    - `ADMIN` — Acesso total ao sistema
+    - `DOCTOR` — Acesso ao módulo médico
+    - `RECEPTIONIST` — Acesso ao módulo de secretaria
+    - `PATIENT` — Acesso ao módulo do paciente
+
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+    description: Desenvolvimento local
+  - url: https://api.clinly.com.br
+    description: Produção
+
+paths:
+  # ============================================================================
+  # AUTH
+  # ============================================================================
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Registrar novo usuário
+      description: Cria uma nova conta de usuário no sistema. Não requer autenticação.
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostRegisterRequest"
+            example:
+              name: "João Silva"
+              email: "joao@email.com"
+              password: "senha123"
+              role: "USER"
+      responses:
+        "201":
+          description: Usuário registrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+              example:
+                token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2FvQGVtYWlsLmNvbSJ9.xxx"
+                email: "joao@email.com"
+                name: "João Silva"
+                role: "USER"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Autenticar usuário
+      description: Realiza login com email e senha. Retorna token JWT.
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostLoginRequest"
+            example:
+              email: "joao@email.com"
+              password: "senha123"
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+              example:
+                token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2FvQGVtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUwMDAwMDAwLCJleHAiOjE3NTAwODA0MDB9.xxx"
+                email: "joao@email.com"
+                name: "João Silva"
+                role: "USER"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ============================================================================
+  # DASHBOARD
+  # ============================================================================
+  /dashboard/summary:
+    get:
+      tags:
+        - Dashboard
+      summary: Obter KPIs do dashboard
+      description: Retorna os indicadores principais do dashboard (consultas hoje, pacientes ativos, novos pacientes no mês, receita do mês).
+      operationId: getDashboardSummary
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: KPIs do dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+              example:
+                appointmentsToday: 12
+                activePatients: 847
+                newPatientsThisMonth: 34
+                revenueThisMonth: 48750.00
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /dashboard/charts:
+    get:
+      tags:
+        - Dashboard
+      summary: Obter dados dos gráficos do dashboard
+      description: Retorna dados de receita por mês, consultas por tipo e consultas por status para os gráficos do dashboard.
+      operationId: getDashboardCharts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Dados dos gráficos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardChartData"
+              example:
+                revenueByMonth:
+                  - month: "Jan"
+                    revenue: 32000.00
+                  - month: "Fev"
+                    revenue: 35500.00
+                  - month: "Mar"
+                    revenue: 38200.00
+                  - month: "Abr"
+                    revenue: 41000.00
+                  - month: "Mai"
+                    revenue: 44800.00
+                  - month: "Jun"
+                    revenue: 48750.00
+                appointmentsByType:
+                  - type: "CONSULTATION"
+                    count: 180
+                  - type: "FOLLOW_UP"
+                    count: 95
+                  - type: "EXAM"
+                    count: 60
+                  - type: "PROCEDURE"
+                    count: 35
+                appointmentsByStatus:
+                  - status: "COMPLETED"
+                    count: 320
+                  - status: "SCHEDULED"
+                    count: 85
+                  - status: "CONFIRMED"
+                    count: 60
+                  - status: "CANCELLED"
+                    count: 35
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /dashboard/activities:
+    get:
+      tags:
+        - Dashboard
+      summary: Obter atividades recentes
+      description: Retorna as atividades recentes do sistema (criação de pacientes, consultas, etc.).
+      operationId: getDashboardActivities
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de atividades recentes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecentActivity"
+              example:
+                - id: "550e8400-e29b-41d4-a716-446655440001"
+                  type: "APPOINTMENT_CREATED"
+                  description: "Nova consulta agendada para Ana Maria Silva com Dr. Carlos Souza"
+                  timestamp: "2026-07-22T08:30:00Z"
+                - id: "550e8400-e29b-41d4-a716-446655440002"
+                  type: "PATIENT_CREATED"
+                  description: "Novo paciente cadastrado: João Pedro Santos"
+                  timestamp: "2026-07-22T08:15:00Z"
+                - id: "550e8400-e29b-41d4-a716-446655440003"
+                  type: "APPOINTMENT_COMPLETED"
+                  description: "Consulta de Maria Clara Oliveira finalizada com Dr. Carlos Souza"
+                  timestamp: "2026-07-22T07:45:00Z"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # ============================================================================
+  # PATIENTS
+  # ============================================================================
+  /patients:
+    get:
+      tags:
+        - Pacientes
+      summary: Listar pacientes
+      description: Retorna lista paginada de pacientes com suporte a busca, filtro por status e ordenação.
+      operationId: getPatients
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (zero-based)
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Quantidade de itens por página
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: search
+          in: query
+          description: Termo de busca (busca por nome, email ou CPF)
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filtrar por status do paciente
+          schema:
+            $ref: "#/components/schemas/PatientStatus"
+        - name: sort
+          in: query
+          description: "Ordenação no formato `campo,direcao`. Ex: `name,asc`, `createdAt,desc`"
+          schema:
+            type: string
+            example: "name,asc"
+      responses:
+        "200":
+          description: Lista paginada de pacientes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagePatientResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags:
+        - Pacientes
+      summary: Criar paciente
+      description: Cria um novo paciente no sistema.
+      operationId: createPatient
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePatientRequest"
+            example:
+              name: "João da Silva"
+              email: "joao@email.com"
+              phone: "(11) 99999-9999"
+              cpf: "123.456.789-00"
+              birthDate: "1990-05-15"
+              gender: "MALE"
+              address: "Rua das Flores, 123 - São Paulo, SP"
+      responses:
+        "201":
+          description: Paciente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /patients/{id}:
+    get:
+      tags:
+        - Pacientes
+      summary: Buscar paciente por ID
+      description: Retorna os dados de um paciente específico.
+      operationId: getPatient
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do paciente
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Dados do paciente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags:
+        - Pacientes
+      summary: Atualizar paciente
+      description: Atualiza os dados de um paciente existente.
+      operationId: updatePatient
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do paciente
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePatientRequest"
+            example:
+              name: "João da Silva"
+              email: "joao@email.com"
+              phone: "(11) 99999-9999"
+              cpf: "123.456.789-00"
+              birthDate: "1990-05-15"
+              gender: "MALE"
+              address: "Rua das Flores, 123 - São Paulo, SP"
+      responses:
+        "200":
+          description: Paciente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+    delete:
+      tags:
+        - Pacientes
+      summary: Excluir paciente
+      description: Remove um paciente do sistema.
+      operationId: deletePatient
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do paciente
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Paciente excluído com sucesso (sem conteúdo)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================================================================
+  # APPOINTMENTS
+  # ============================================================================
+  /appointments:
+    get:
+      tags:
+        - Agendamentos
+      summary: Listar agendamentos
+      description: Retorna lista paginada de agendamentos com suporte a filtros por profissional, status e período.
+      operationId: getAppointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (zero-based)
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Itens por página
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: professionalId
+          in: query
+          description: Filtrar por UUID do profissional
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          description: Filtrar por status do agendamento
+          schema:
+            $ref: "#/components/schemas/AppointmentStatus"
+        - name: startDate
+          in: query
+          description: Data início do filtro (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Data fim do filtro (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: sort
+          in: query
+          description: "Ordenação no formato `campo,direcao`. Ex: `date,asc`, `createdAt,desc`"
+          schema:
+            type: string
+            example: "date,asc"
+      responses:
+        "200":
+          description: Lista paginada de agendamentos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageAppointmentResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags:
+        - Agendamentos
+      summary: Criar agendamento
+      description: Cria um novo agendamento/consulta no sistema.
+      operationId: createAppointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAppointmentRequest"
+            example:
+              patientId: "550e8400-e29b-41d4-a716-446655440010"
+              professionalId: "550e8400-e29b-41d4-a716-446655440020"
+              date: "2026-07-25"
+              startTime: "09:00"
+              endTime: "09:30"
+              type: "CONSULTATION"
+              notes: "Retorno para controle"
+      responses:
+        "201":
+          description: Agendamento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppointmentResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /appointments/{id}:
+    get:
+      tags:
+        - Agendamentos
+      summary: Buscar agendamento por ID
+      description: Retorna os dados de um agendamento específico.
+      operationId: getAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do agendamento
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Dados do agendamento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppointmentResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags:
+        - Agendamentos
+      summary: Atualizar agendamento
+      description: Atualiza os dados de um agendamento existente.
+      operationId: updateAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do agendamento
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAppointmentRequest"
+            example:
+              patientId: "550e8400-e29b-41d4-a716-446655440010"
+              professionalId: "550e8400-e29b-41d4-a716-446655440020"
+              date: "2026-07-25"
+              startTime: "09:00"
+              endTime: "09:30"
+              type: "CONSULTATION"
+              notes: "Retorno para controle"
+      responses:
+        "200":
+          description: Agendamento atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppointmentResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+    delete:
+      tags:
+        - Agendamentos
+      summary: Excluir agendamento
+      description: Remove um agendamento do sistema.
+      operationId: deleteAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do agendamento
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Agendamento excluído com sucesso (sem conteúdo)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================================================================
+  # PROFESSIONALS
+  # ============================================================================
+  /professionals:
+    get:
+      tags:
+        - Profissionais
+      summary: Listar profissionais
+      description: Retorna lista não paginada de profissionais (médicos) para popular dropdowns de seleção no frontend.
+      operationId: getProfessionals
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de profissionais
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StaffResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # ============================================================================
+  # STAFF
+  # ============================================================================
+  /staff:
+    get:
+      tags:
+        - Equipe
+      summary: Listar equipe
+      description: Retorna lista paginada de membros da equipe com suporte a busca, filtro por cargo e status.
+      operationId: getStaff
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (zero-based)
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Itens por página
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: search
+          in: query
+          description: Termo de busca (busca por nome, email ou CRM)
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: Filtrar por cargo
+          schema:
+            $ref: "#/components/schemas/StaffRole"
+        - name: status
+          in: query
+          description: Filtrar por status do membro
+          schema:
+            $ref: "#/components/schemas/StaffStatus"
+        - name: sort
+          in: query
+          description: "Ordenação no formato `campo,direcao`. Ex: `name,asc`, `createdAt,desc`"
+          schema:
+            type: string
+            example: "name,asc"
+      responses:
+        "200":
+          description: Lista paginada de membros da equipe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageStaffResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags:
+        - Equipe
+      summary: Criar membro da equipe
+      description: Adiciona um novo membro à equipe clínica.
+      operationId: createStaffMember
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStaffRequest"
+            example:
+              name: "Dr. Carlos Souza"
+              email: "carlos@clinly.com"
+              phone: "(11) 99888-7777"
+              role: "DOCTOR"
+              specialty: "Clínico Geral"
+              crm: "12345/SP"
+      responses:
+        "201":
+          description: Membro criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /staff/{id}:
+    get:
+      tags:
+        - Equipe
+      summary: Buscar membro da equipe por ID
+      description: Retorna os dados de um membro da equipe específico.
+      operationId: getStaffMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do membro da equipe
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Dados do membro da equipe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags:
+        - Equipe
+      summary: Atualizar membro da equipe
+      description: Atualiza os dados de um membro da equipe existente.
+      operationId: updateStaffMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do membro da equipe
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStaffRequest"
+            example:
+              name: "Dr. Carlos Souza"
+              email: "carlos@clinly.com"
+              phone: "(11) 99888-7777"
+              role: "DOCTOR"
+              specialty: "Clínico Geral"
+              crm: "12345/SP"
+      responses:
+        "200":
+          description: Membro atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+    delete:
+      tags:
+        - Equipe
+      summary: Excluir membro da equipe
+      description: Remove um membro da equipe do sistema.
+      operationId: deleteStaffMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID do membro da equipe
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Membro excluído com sucesso (sem conteúdo)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================================================================
+  # REPORTS
+  # ============================================================================
+  /reports/summary:
+    get:
+      tags:
+        - Relatórios
+      summary: Obter resumo de relatórios
+      description: Retorna KPIs consolidados de relatórios para o período selecionado.
+      operationId: getReportSummary
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          description: Data início do período (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Data fim do período (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Resumo de relatórios
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportSummary"
+              example:
+                totalRevenue: 125000.90
+                totalAppointments: 450
+                totalPatients: 320
+                cancellationRate: 0.05
+                noShowRate: 0.03
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /reports/charts:
+    get:
+      tags:
+        - Relatórios
+      summary: Obter dados dos gráficos de relatórios
+      description: Retorna dados para os gráficos de relatórios (receita por mês, consultas por mês, consultas por especialidade, cancelamentos por mês).
+      operationId: getReportCharts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          description: Data início do período (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: Data fim do período (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Dados dos gráficos de relatórios
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportChartData"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # ============================================================================
+  # NOTIFICATIONS
+  # ============================================================================
+  /notifications:
+    get:
+      tags:
+        - Notificações
+      summary: Listar notificações
+      description: Retorna as notificações do usuário autenticado. Endpoint somente leitura.
+      operationId: getNotifications
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de notificações
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+              example:
+                - id: "550e8400-e29b-41d4-a716-446655440100"
+                  title: "Consulta agendada"
+                  message: "Você tem uma consulta agendada com João da Silva às 14:00"
+                  read: false
+                  createdAt: "2026-07-21T10:00:00Z"
+                - id: "550e8400-e29b-41d4-a716-446655440101"
+                  title: "Lembrete de consulta"
+                  message: "Sua consulta com Dr. Carlos Souza é amanhã às 09:00"
+                  read: true
+                  createdAt: "2026-07-21T08:00:00Z"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT obtido via POST /auth/login ou POST /auth/register. Deve ser enviado no header `Authorization: Bearer <token>`.
+
+  schemas:
+    # ==========================================================================
+    # ENUMS
+    # ==========================================================================
+    PatientStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - ARCHIVED
+      description: Status do paciente no sistema
+
+    StaffStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - ON_LEAVE
+      description: Status do membro da equipe
+
+    AppointmentStatus:
+      type: string
+      enum:
+        - SCHEDULED
+        - CONFIRMED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        - NO_SHOW
+      description: Status do agendamento
+
+    StaffRole:
+      type: string
+      enum:
+        - DOCTOR
+        - NURSE
+        - RECEPTIONIST
+        - ADMIN
+      description: Cargo do membro da equipe
+
+    AppointmentType:
+      type: string
+      enum:
+        - CONSULTATION
+        - FOLLOW_UP
+        - EXAM
+        - PROCEDURE
+        - TELEMEDICINE
+      description: Tipo da consulta/agendamento
+
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+        - OTHER
+      description: Gênero do paciente
+
+    UserRole:
+      type: string
+      enum:
+        - USER
+        - ADMIN
+      description: Role do usuário no sistema
+
+    ActivityType:
+      type: string
+      enum:
+        - PATIENT_CREATED
+        - PATIENT_UPDATED
+        - APPOINTMENT_CREATED
+        - APPOINTMENT_COMPLETED
+        - APPOINTMENT_CANCELLED
+        - STAFF_ADDED
+      description: Tipo de atividade registrada no sistema
+
+    # ==========================================================================
+    # AUTH SCHEMAS
+    # ==========================================================================
+    PostRegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - role
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 120
+          description: Nome completo do usuário
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Email do usuário (deve ser único)
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+          description: Senha do usuário
+        role:
+          $ref: "#/components/schemas/UserRole"
+      example:
+        name: "João Silva"
+        email: "joao@email.com"
+        password: "senha123"
+        role: "USER"
+
+    PostLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Email do usuário
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Senha do usuário
+      example:
+        email: "joao@email.com"
+        password: "senha123"
+
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - email
+        - name
+        - role
+      properties:
+        token:
+          type: string
+          description: Token JWT para autenticação nas requisições subsequentes
+        email:
+          type: string
+          format: email
+          description: Email do usuário autenticado
+        name:
+          type: string
+          description: Nome do usuário autenticado
+        role:
+          $ref: "#/components/schemas/UserRole"
+      example:
+        token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2FvQGVtYWlsLmNvbSJ9.xxx"
+        email: "joao@email.com"
+        name: "João Silva"
+        role: "USER"
+
+    # ==========================================================================
+    # PATIENT SCHEMAS
+    # ==========================================================================
+    CreatePatientRequest:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+        - cpf
+        - birthDate
+        - gender
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 120
+          description: Nome completo do paciente
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Email do paciente (deve ser único no sistema)
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          description: Número de telefone do paciente
+        cpf:
+          type: string
+          minLength: 11
+          maxLength: 14
+          description: CPF do paciente (deve ser único no sistema). Formatos aceitos: `12345678900` ou `123.456.789-00`
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento (YYYY-MM-DD)
+        gender:
+          $ref: "#/components/schemas/Gender"
+        address:
+          type: string
+          maxLength: 500
+          description: Endereço completo do paciente
+
+    UpdatePatientRequest:
+      type: object
+      description: Mesmos campos do CreatePatientRequest. Todos os campos são opcionais na atualização (PATCH semantics), mas o frontend sempre envia todos os campos preenchidos.
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 120
+          description: Nome completo do paciente
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Email do paciente (deve ser único)
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          description: Número de telefone
+        cpf:
+          type: string
+          minLength: 11
+          maxLength: 14
+          description: CPF do paciente (deve ser único)
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento (YYYY-MM-DD)
+        gender:
+          $ref: "#/components/schemas/Gender"
+        address:
+          type: string
+          maxLength: 500
+          description: Endereço completo
+
+    PatientResponse:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - phone
+        - cpf
+        - birthDate
+        - gender
+        - address
+        - status
+        - lastAppointment
+        - nextAppointment
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID do paciente
+        name:
+          type: string
+          description: Nome completo do paciente
+        email:
+          type: string
+          format: email
+          description: Email do paciente
+        phone:
+          type: string
+          description: Telefone do paciente
+        cpf:
+          type: string
+          description: CPF do paciente
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento (YYYY-MM-DD)
+        gender:
+          $ref: "#/components/schemas/Gender"
+        address:
+          type: string
+          description: Endereço completo
+        status:
+          $ref: "#/components/schemas/PatientStatus"
+        lastAppointment:
+          type: string
+          format: date
+          nullable: true
+          description: Data da última consulta (YYYY-MM-DD) ou null se nunca consultou
+        nextAppointment:
+          type: string
+          format: date
+          nullable: true
+          description: Data da próxima consulta agendada (YYYY-MM-DD) ou null
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação (ISO 8601)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data/hora da última atualização (ISO 8601)
+
+    PagePatientResponse:
+      type: object
+      required:
+        - content
+        - page
+        - size
+        - totalElements
+        - totalPages
+        - last
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PatientResponse"
+        page:
+          type: integer
+          description: Número da página atual (zero-based)
+        size:
+          type: integer
+          description: Quantidade de itens por página
+        totalElements:
+          type: integer
+          description: Total de elementos no banco
+        totalPages:
+          type: integer
+          description: Total de páginas
+        last:
+          type: boolean
+          description: Indica se é a última página
+        first:
+          type: boolean
+          description: Indica se é a primeira página
+        numberOfElements:
+          type: integer
+          description: Quantidade de elementos na página atual
+        empty:
+          type: boolean
+          description: Indica se a página está vazia
+        sort:
+          type: object
+          properties:
+            sorted:
+              type: boolean
+            unsorted:
+              type: boolean
+            empty:
+              type: boolean
+
+    # ==========================================================================
+    # APPOINTMENT SCHEMAS
+    # ==========================================================================
+    CreateAppointmentRequest:
+      type: object
+      required:
+        - patientId
+        - professionalId
+        - date
+        - startTime
+        - endTime
+        - type
+      properties:
+        patientId:
+          type: string
+          format: uuid
+          description: UUID do paciente
+        professionalId:
+          type: string
+          format: uuid
+          description: UUID do profissional (médico)
+        date:
+          type: string
+          format: date
+          description: Data do agendamento (YYYY-MM-DD)
+        startTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de início (HH:MM). Deve ser anterior a endTime.
+        endTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de término (HH:MM). Deve ser posterior a startTime.
+        type:
+          $ref: "#/components/schemas/AppointmentType"
+        notes:
+          type: string
+          maxLength: 1000
+          description: Observações sobre o agendamento. O frontend sempre envia este campo (pode ser string vazia).
+
+    UpdateAppointmentRequest:
+      type: object
+      description: Mesmos campos do CreateAppointmentRequest. O frontend sempre envia todos os campos.
+      properties:
+        patientId:
+          type: string
+          format: uuid
+          description: UUID do paciente
+        professionalId:
+          type: string
+          format: uuid
+          description: UUID do profissional
+        date:
+          type: string
+          format: date
+          description: Data do agendamento (YYYY-MM-DD)
+        startTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de início (HH:MM)
+        endTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de término (HH:MM)
+        type:
+          $ref: "#/components/schemas/AppointmentType"
+        notes:
+          type: string
+          maxLength: 1000
+          description: Observações
+
+    AppointmentResponse:
+      type: object
+      required:
+        - id
+        - patientId
+        - patientName
+        - professionalId
+        - professionalName
+        - date
+        - startTime
+        - endTime
+        - type
+        - status
+        - notes
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID do agendamento
+        patientId:
+          type: string
+          format: uuid
+          description: UUID do paciente
+        patientName:
+          type: string
+          description: Nome do paciente (denormalizado para evitar join no frontend)
+        professionalId:
+          type: string
+          format: uuid
+          description: UUID do profissional
+        professionalName:
+          type: string
+          description: Nome do profissional (denormalizado)
+        date:
+          type: string
+          format: date
+          description: Data do agendamento (YYYY-MM-DD)
+        startTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de início (HH:MM)
+        endTime:
+          type: string
+          pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$"
+          description: Horário de término (HH:MM)
+        type:
+          $ref: "#/components/schemas/AppointmentType"
+        status:
+          $ref: "#/components/schemas/AppointmentStatus"
+        notes:
+          type: string
+          nullable: true
+          description: Observações. Pode ser null no response.
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação (ISO 8601)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data/hora da última atualização (ISO 8601)
+
+    PageAppointmentResponse:
+      type: object
+      required:
+        - content
+        - page
+        - size
+        - totalElements
+        - totalPages
+        - last
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentResponse"
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        last:
+          type: boolean
+        first:
+          type: boolean
+        numberOfElements:
+          type: integer
+        empty:
+          type: boolean
+        sort:
+          type: object
+          properties:
+            sorted:
+              type: boolean
+            unsorted:
+              type: boolean
+            empty:
+              type: boolean
+
+    # ==========================================================================
+    # STAFF SCHEMAS
+    # ==========================================================================
+    CreateStaffRequest:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+        - role
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 120
+          description: Nome completo do membro da equipe
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Email do membro (deve ser único)
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          description: Telefone do membro
+        role:
+          $ref: "#/components/schemas/StaffRole"
+        specialty:
+          type: string
+          maxLength: 100
+          description: Especialidade (principalmente para médicos). O frontend sempre envia este campo (pode ser string vazia).
+        crm:
+          type: string
+          maxLength: 20
+          description: "CRM do médico. Obrigatório se role = DOCTOR. Deve ser único. O frontend sempre envia este campo (pode ser string vazia)."
+
+    UpdateStaffRequest:
+      type: object
+      description: Mesmos campos do CreateStaffRequest. O frontend sempre envia todos os campos.
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+        role:
+          $ref: "#/components/schemas/StaffRole"
+        specialty:
+          type: string
+          maxLength: 100
+        crm:
+          type: string
+          maxLength: 20
+
+    StaffResponse:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - phone
+        - role
+        - specialty
+        - crm
+        - status
+        - avatarUrl
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID do membro da equipe
+        name:
+          type: string
+          description: Nome completo
+        email:
+          type: string
+          format: email
+          description: Email
+        phone:
+          type: string
+          description: Telefone
+        role:
+          $ref: "#/components/schemas/StaffRole"
+        specialty:
+          type: string
+          nullable: true
+          description: Especialidade (principalmente para médicos). Pode ser null.
+        crm:
+          type: string
+          nullable: true
+          description: "CRM do médico. Pode ser null para não-médicos."
+        status:
+          $ref: "#/components/schemas/StaffStatus"
+        avatarUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL do avatar do membro. Pode ser null.
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação (ISO 8601)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data/hora da última atualização (ISO 8601)
+
+    PageStaffResponse:
+      type: object
+      required:
+        - content
+        - page
+        - size
+        - totalElements
+        - totalPages
+        - last
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/StaffResponse"
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        last:
+          type: boolean
+        first:
+          type: boolean
+        numberOfElements:
+          type: integer
+        empty:
+          type: boolean
+        sort:
+          type: object
+          properties:
+            sorted:
+              type: boolean
+            unsorted:
+              type: boolean
+            empty:
+              type: boolean
+
+    # ==========================================================================
+    # DASHBOARD SCHEMAS
+    # ==========================================================================
+    DashboardSummary:
+      type: object
+      required:
+        - appointmentsToday
+        - activePatients
+        - newPatientsThisMonth
+        - revenueThisMonth
+      properties:
+        appointmentsToday:
+          type: integer
+          minimum: 0
+          description: Número de consultas agendadas para hoje
+        activePatients:
+          type: integer
+          minimum: 0
+          description: Total de pacientes com status ACTIVE
+        newPatientsThisMonth:
+          type: integer
+          minimum: 0
+          description: Novos pacientes cadastrados no mês atual
+        revenueThisMonth:
+          type: number
+          format: double
+          minimum: 0
+          description: Receita total do mês atual
+
+    DashboardChartData:
+      type: object
+      required:
+        - revenueByMonth
+        - appointmentsByType
+        - appointmentsByStatus
+      properties:
+        revenueByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/RevenueByMonth"
+        appointmentsByType:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentsByType"
+        appointmentsByStatus:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentsByStatus"
+
+    RevenueByMonth:
+      type: object
+      required:
+        - month
+        - revenue
+      properties:
+        month:
+          type: string
+          description: Nome abreviado do mês (ex: "Jan", "Fev")
+        revenue:
+          type: number
+          format: double
+          minimum: 0
+          description: Receita do mês
+
+    AppointmentsByType:
+      type: object
+      required:
+        - type
+        - count
+      properties:
+        type:
+          type: string
+          description: Tipo da consulta (ex: "CONSULTATION", "FOLLOW_UP")
+        count:
+          type: integer
+          minimum: 0
+          description: Quantidade de consultas
+
+    AppointmentsByStatus:
+      type: object
+      required:
+        - status
+        - count
+      properties:
+        status:
+          type: string
+          description: Status da consulta (ex: "COMPLETED", "SCHEDULED")
+        count:
+          type: integer
+          minimum: 0
+          description: Quantidade de consultas
+
+    RecentActivity:
+      type: object
+      required:
+        - id
+        - type
+        - description
+        - timestamp
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID da atividade
+        type:
+          $ref: "#/components/schemas/ActivityType"
+        description:
+          type: string
+          description: Descrição legível da atividade
+        timestamp:
+          type: string
+          format: date-time
+          description: Data/hora da atividade (ISO 8601)
+
+    # ==========================================================================
+    # REPORT SCHEMAS
+    # ==========================================================================
+    ReportSummary:
+      type: object
+      required:
+        - totalRevenue
+        - totalAppointments
+        - totalPatients
+        - cancellationRate
+        - noShowRate
+      properties:
+        totalRevenue:
+          type: number
+          format: double
+          minimum: 0
+          description: Receita total no período
+        totalAppointments:
+          type: integer
+          minimum: 0
+          description: Total de consultas no período
+        totalPatients:
+          type: integer
+          minimum: 0
+          description: Total de pacientes atendidos no período
+        cancellationRate:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Taxa de cancelamento (0.0 a 1.0)
+        noShowRate:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Taxa de não comparecimento (0.0 a 1.0)
+
+    ReportChartData:
+      type: object
+      required:
+        - revenueByMonth
+        - appointmentsByMonth
+        - appointmentsBySpecialty
+        - cancellationByMonth
+      properties:
+        revenueByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/RevenueByMonth"
+        appointmentsByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentsByMonth"
+        appointmentsBySpecialty:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentsBySpecialty"
+        cancellationByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/CancellationByMonth"
+
+    AppointmentsByMonth:
+      type: object
+      required:
+        - month
+        - count
+      properties:
+        month:
+          type: string
+          description: Nome abreviado do mês (ex: "Jan", "Fev")
+        count:
+          type: integer
+          minimum: 0
+          description: Quantidade de consultas
+
+    AppointmentsBySpecialty:
+      type: object
+      required:
+        - specialty
+        - count
+      properties:
+        specialty:
+          type: string
+          description: Nome da especialidade
+        count:
+          type: integer
+          minimum: 0
+          description: Quantidade de consultas
+
+    CancellationByMonth:
+      type: object
+      required:
+        - month
+        - count
+      properties:
+        month:
+          type: string
+          description: Nome abreviado do mês (ex: "Jan", "Fev")
+        count:
+          type: integer
+          minimum: 0
+          description: Quantidade de cancelamentos
+
+    # ==========================================================================
+    # NOTIFICATION SCHEMAS
+    # ==========================================================================
+    Notification:
+      type: object
+      required:
+        - id
+        - title
+        - message
+        - read
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID da notificação
+        title:
+          type: string
+          maxLength: 200
+          description: Título curto da notificação
+        message:
+          type: string
+          maxLength: 1000
+          description: Descrição detalhada da notificação
+        read:
+          type: boolean
+          description: Indica se a notificação já foi lida
+        createdAt:
+          type: string
+          format: date-time
+          description: Data/hora de criação (ISO 8601)
+
+    # ==========================================================================
+    # ERROR SCHEMAS
+    # ==========================================================================
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - status
+        - timestamp
+      properties:
+        message:
+          type: string
+          description: Mensagem de erro legível
+        status:
+          type: integer
+          description: Código HTTP do erro
+        timestamp:
+          type: string
+          format: date-time
+          description: Data/hora do erro (ISO 8601)
+        path:
+          type: string
+          description: Caminho da requisição que gerou o erro
+        validationErrors:
+          type: array
+          description: Erros de validação de campos (para erros 422)
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Nome do campo com erro
+              message:
+                type: string
+                description: Mensagem de erro do campo
+      example:
+        message: "Email já cadastrado"
+        status: 409
+        timestamp: "2026-07-21T15:00:00Z"
+        path: "/patients"
+        validationErrors:
+          - field: "email"
+            message: "Email já está em uso"
+
+  responses:
+    BadRequest:
+      description: "400 Bad Request — Dados inválidos ou mal formatados"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Dados inválidos. Verifique os campos e tente novamente."
+            status: 400
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/patients"
+            validationErrors:
+              - field: "name"
+                message: "Nome deve ter no mínimo 3 caracteres"
+
+    Unauthorized:
+      description: "401 Unauthorized — Token JWT ausente, inválido ou expirado"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Token de autenticação inválido ou expirado"
+            status: 401
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/patients"
+
+    Forbidden:
+      description: "403 Forbidden — Usuário não tem permissão para acessar este recurso"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Acesso negado. Você não tem permissão para acessar este recurso."
+            status: 403
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/admin/usuarios"
+
+    NotFound:
+      description: "404 Not Found — Recurso não encontrado"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Paciente não encontrado"
+            status: 404
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/patients/550e8400-e29b-41d4-a716-446655440999"
+
+    Conflict:
+      description: "409 Conflict — Conflito (ex: email ou CPF duplicado)"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Email já cadastrado no sistema"
+            status: 409
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/patients"
+
+    UnprocessableEntity:
+      description: "422 Unprocessable Entity — Erro de validação de negócio"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Erro de validação"
+            status: 422
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/appointments"
+            validationErrors:
+              - field: "startTime"
+                message: "Já existe uma consulta agendada para este horário"
+
+    InternalServerError:
+      description: "500 Internal Server Error — Erro interno do servidor"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "Erro interno do servidor. Tente novamente mais tarde."
+            status: 500
+            timestamp: "2026-07-21T15:00:00Z"
+            path: "/dashboard/summary"

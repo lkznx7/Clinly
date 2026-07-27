@@ -1,0 +1,68 @@
+# =============================================================================
+# AUTH SCHEMAS — Clinly API
+# =============================================================================
+
+PostRegisterRequest:
+  description: Dados para registro de novo usuário
+  type: object
+  required:
+    - name
+    - email
+    - password
+    - role
+  properties:
+    name:
+      type: string
+      minLength: 2
+      maxLength: 120
+      description: Nome completo do usuário
+    email:
+      type: string
+      format: email
+      maxLength: 255
+      description: Email do usuário (deve ser único no sistema)
+    password:
+      type: string
+      minLength: 8
+      maxLength: 100
+      description: Senha do usuário
+    role:
+      $ref: "./enums.yaml#/UserRole"
+
+PostLoginRequest:
+  description: Credenciais para login
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    email:
+      type: string
+      format: email
+      maxLength: 255
+    password:
+      type: string
+      minLength: 1
+      maxLength: 100
+
+AuthResponse:
+  description: Resposta de autenticação (login e register)
+  type: object
+  required:
+    - token
+    - email
+    - name
+    - role
+  properties:
+    token:
+      type: string
+      description: Token JWT para autenticação
+    email:
+      type: string
+      format: email
+      description: Email do usuário autenticado
+    name:
+      type: string
+      description: Nome do usuário autenticado
+    role:
+      $ref: "./enums.yaml#/UserRole"

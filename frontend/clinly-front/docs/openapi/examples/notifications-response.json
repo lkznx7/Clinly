@@ -1,0 +1,16 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440100",
+    "title": "Consulta agendada",
+    "message": "Você tem uma consulta agendada com João da Silva às 14:00",
+    "read": false,
+    "createdAt": "2026-07-21T10:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440101",
+    "title": "Lembrete de consulta",
+    "message": "Sua consulta com Dr. Carlos Souza é amanhã às 09:00",
+    "read": true,
+    "createdAt": "2026-07-21T08:00:00Z"
+  }
+]

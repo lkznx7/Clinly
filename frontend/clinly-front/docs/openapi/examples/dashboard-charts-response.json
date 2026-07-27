@@ -1,0 +1,22 @@
+{
+  "revenueByMonth": [
+    { "month": "Jan", "revenue": 32000.00 },
+    { "month": "Fev", "revenue": 35500.00 },
+    { "month": "Mar", "revenue": 38200.00 },
+    { "month": "Abr", "revenue": 41000.00 },
+    { "month": "Mai", "revenue": 44800.00 },
+    { "month": "Jun", "revenue": 48750.00 }
+  ],
+  "appointmentsByType": [
+    { "type": "CONSULTATION", "count": 180 },
+    { "type": "FOLLOW_UP", "count": 95 },
+    { "type": "EXAM", "count": 60 },
+    { "type": "PROCEDURE", "count": 35 }
+  ],
+  "appointmentsByStatus": [
+    { "status": "COMPLETED", "count": 320 },
+    { "status": "SCHEDULED", "count": 85 },
+    { "status": "CONFIRMED", "count": 60 },
+    { "status": "CANCELLED", "count": 35 }
+  ]
+}

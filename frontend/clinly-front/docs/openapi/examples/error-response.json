@@ -1,0 +1,12 @@
+{
+  "message": "Email já cadastrado no sistema",
+  "status": 409,
+  "timestamp": "2026-07-21T15:00:00Z",
+  "path": "/patients",
+  "validationErrors": [
+    {
+      "field": "email",
+      "message": "Email já está em uso"
+    }
+  ]
+}

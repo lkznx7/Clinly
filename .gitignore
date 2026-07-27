@@ -1,0 +1,30 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Java
+*.class
+*.jar
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+.next/
+out/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Docker volumes
+postgres_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+*.log
