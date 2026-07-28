@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Monolith
+  datasource:
+    url:
+    username:
+    password:
+jwt:
+  expiration: 28800000
+  secret: 1a4a2705cd1a295ed87baa0a699dd8f170fa4d9125854b0d6cddbec9e5b9e343
